@@ -1,0 +1,38 @@
+# compiled output
+microservices/*/dist
+microservices/*/node_modules
+
+# Logs
+microservices/*/logs
+microservices/*/*.log
+microservices/*/npm-debug.log*
+microservices/*/pnpm-debug.log*
+microservices/*/yarn-debug.log*
+microservices/*/yarn-error.log*
+microservices/*/lerna-debug.log*
+
+# OS
+microservices/*/.DS_Store
+
+# Tests
+microservices/*/coverage
+microservices/*/.nyc_output
+
+# IDEs and editors
+microservices/*/.idea
+microservices/*/.project
+microservices/*/.classpath
+microservices/*/.c9/
+microservices/*/*.launch
+microservices/*/.settings/
+microservices/*/*.sublime-workspace
+
+# IDE - VSCode
+microservices/*/.vscode/*
+microservices/*/!.vscode/settings.json
+microservices/*/!.vscode/tasks.json
+microservices/*/!.vscode/launch.json
+microservices/*/!.vscode/extensions.json
+
+# Keys
+microservices/*/keys

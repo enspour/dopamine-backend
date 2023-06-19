@@ -1,0 +1,45 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "declaration": true,
+        "removeComments": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "allowSyntheticDefaultImports": true,
+        "target": "es2017",
+        "sourceMap": true,
+        "outDir": "./dist",
+        "baseUrl": "./",
+        "paths": {
+            "@configs": ["src/configs"],
+            "@constants": ["src/constants"],
+            "@interfaces": ["src/interfaces"],
+            "@regex": ["src/regex"],
+            "@utils": ["src/utils"],
+
+            "@pipes": ["src/common/pipes"],
+            "@filters": ["src/common/filters"],
+
+            "@postgres/*": ["src/databases/postgres/*"],
+            "@redis/*": ["src/databases/redis/*"],
+
+            "@email-queue/*": ["src/queues/email-queue/*"],
+
+            "@auth-guards/*": ["src/auth/guards/*"],
+            "@auth/*": ["src/auth/*"],
+            "@jwt/*": ["src/jwt/*"],
+            "@sessions/*": ["src/sessions/*"],
+            "@users-emails/*": ["src/users-emails/*"],
+            "@users-security/*": ["src/users-security/*"],
+            "@users/*": ["src/users/*"],
+            "@tfa/*": ["src/tfa/*"]
+        },
+        "incremental": true,
+        "skipLibCheck": true,
+        "strictNullChecks": false,
+        "noImplicitAny": false,
+        "strictBindCallApply": false,
+        "forceConsistentCasingInFileNames": false,
+        "noFallthroughCasesInSwitch": false
+    }
+}
