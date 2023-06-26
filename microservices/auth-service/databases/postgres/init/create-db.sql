@@ -1,1 +1,1 @@
-CREATE DATABASE dopamine;
+CREATE DATABASE dopamine_auth;
