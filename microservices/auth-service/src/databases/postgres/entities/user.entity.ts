@@ -21,7 +21,7 @@ export class UserEntity implements User, Record<UserEntityRelations, any> {
     @PrimaryGeneratedColumn("increment")
     id: number;
 
-    @Column({ length: 200 })
+    @Column("text")
     nickname: string;
 
     @Column("text")
