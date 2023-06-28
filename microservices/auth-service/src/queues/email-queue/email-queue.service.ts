@@ -10,10 +10,10 @@ export class EmailQueueService {
     constructor(@Inject(EMAIL_QUEUE) private queue: ClientProxy) {}
 
     sendECCode(email: string, code: string) {
-        this.queue.emit("send:code:email_confirmation", { email, code });
+        this.queue.emit("email.codes.send.EC", { email, code });
     }
 
     sendTFACode(email: string, code: string) {
-        this.queue.emit("send:code:TFA", { email, code });
+        this.queue.emit("email.codes.send.TFA", { email, code });
     }
 }

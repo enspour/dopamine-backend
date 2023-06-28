@@ -22,13 +22,6 @@ export const EmailQueueProvider = {
             },
         });
 
-        try {
-            await client.connect();
-        } catch (e) {
-            console.log(e);
-            throw new Error("[EMAIL QUEUE] Error connection");
-        }
-
         return client;
     },
 };

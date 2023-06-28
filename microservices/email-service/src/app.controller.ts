@@ -7,14 +7,14 @@ import { AppService } from "./app.service";
 export class AppController {
     constructor(private appService: AppService) {}
 
-    @EventPattern("send:code:email_confirmation")
+    @EventPattern("email.codes.send.EC")
     async sendEmailConfirmationCode(@Payload() data: any) {
         const { email, code } = data;
 
         await this.appService.sendEmailConfirmationCode(email, code);
     }
 
-    @EventPattern("send:code:TFA")
+    @EventPattern("email.codes.send.TFA")
     async sendTFACode(@Payload() data: any) {
         const { email, code } = data;
 
