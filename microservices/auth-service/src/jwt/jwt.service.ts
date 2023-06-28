@@ -20,7 +20,7 @@ export class JwtService {
     ) {}
 
     async issue(
-        user: Omit<User, "settings" | "emails" | "password">,
+        user: Pick<User, "id" | "nickname" | "avatar">,
     ): Promise<JwtTokens> {
         const { id, nickname, avatar } = user;
 

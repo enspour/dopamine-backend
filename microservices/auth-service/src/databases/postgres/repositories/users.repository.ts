@@ -6,7 +6,7 @@ import { UserPasswordEntity } from "@postgres/entities/user-password.entity";
 import { UserSecurityEntity } from "@postgres/entities/user-security.entity";
 import {
     UserEntity,
-    UserEntityRelations,
+    UserEntityRelationsFields,
 } from "@postgres/entities/user.entity";
 
 import constants from "@constants";
@@ -20,10 +20,10 @@ export class UsersRepository {
         this.repository = postgres.getRepository(UserEntity);
     }
 
-    async findOneById<T extends UserEntityRelations>(
+    async findOneById<T extends UserEntityRelationsFields = never>(
         id: number,
         relations: Record<T, boolean> = <Record<T, boolean>>{},
-    ): Promise<Omit<UserEntity, Exclude<UserEntityRelations, T>> | null> {
+    ): Promise<Omit<UserEntity, Exclude<UserEntityRelationsFields, T>> | null> {
         return await this.repository.findOne({
             where: {
                 id,
@@ -32,10 +32,10 @@ export class UsersRepository {
         });
     }
 
-    async findOneByEmail<T extends UserEntityRelations>(
+    async findOneByEmail<T extends UserEntityRelationsFields = never>(
         email: string,
         relations: Record<T, boolean> = <Record<T, boolean>>{},
-    ): Promise<Omit<UserEntity, Exclude<UserEntityRelations, T>> | null> {
+    ): Promise<Omit<UserEntity, Exclude<UserEntityRelationsFields, T>> | null> {
         return await this.repository.findOne({
             where: {
                 emails: {
@@ -76,10 +76,10 @@ export class UsersRepository {
         return result;
     }
 
-    async removeOneById<T extends UserEntityRelations>(
+    async removeOneById<T extends UserEntityRelationsFields = never>(
         id: number,
         relations: Record<T, boolean> = <Record<T, boolean>>{},
-    ): Promise<Omit<UserEntity, Exclude<UserEntityRelations, T>> | null> {
+    ): Promise<Omit<UserEntity, Exclude<UserEntityRelationsFields, T>> | null> {
         const user = await this.repository.findOne({
             where: {
                 id,

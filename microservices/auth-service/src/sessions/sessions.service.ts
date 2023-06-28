@@ -38,7 +38,7 @@ export class SessionsService {
     }
 
     async login(
-        user: Omit<User, "settings" | "emails" | "password">,
+        user: Pick<User, "id" | "nickname" | "avatar">,
         data: Omit<Session, "id" | "expired_at" | "created_at">,
         res: Response,
     ) {
