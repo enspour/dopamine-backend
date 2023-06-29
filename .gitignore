@@ -34,5 +34,8 @@ microservices/*/!.vscode/tasks.json
 microservices/*/!.vscode/launch.json
 microservices/*/!.vscode/extensions.json
 
+# Docker data
+microservices/*/databases/*/data
+
 # Keys
 microservices/*/keys

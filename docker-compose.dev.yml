@@ -1,0 +1,122 @@
+version: "3.9"
+services:
+  # AUTH SERVICE
+  auth-service:
+    build:
+      dockerfile: Dockerfile
+      context: ./microservices/auth-service
+      target: development
+    container_name: dopamine-auth-service
+    command: bash -c "cd /usr/src/app && yarn run start:dev"
+    environment:
+      - ENV=development
+      - PORT=3010
+      - PG_HOST=auth-service-postgres
+      - PG_PORT=5432
+      - PG_USERNAME=postgres
+      - PG_PASSWORD=secret
+      - PG_DATABASE=dopamine_auth
+      - REDIS_HOST=auth-service-redis
+      - REDIS_USERNAME=default
+      - REDIS_PASSWORD=secret
+      - REDIS_PORT=6379
+      - EMAIL_QUEUE_URLS=amqp://rabbitmq-queue:5672
+      - EMAIL_QUEUE_NAME=email_queue
+      - AUTH_QUEUE_URLS=kafka-queue:9092
+      - AUTH_QUEUE_NAME=auth_queue
+    volumes:
+      - ./microservices/auth-service:/usr/src/app
+    ports:
+      - 3010:3010
+    depends_on:
+      - auth-service-postgres
+      - auth-service-redis
+      - rabbitmq-queue
+      - kafka-queue
+    restart: always
+
+  auth-service-postgres:
+    image: postgres:14.5-alpine
+    container_name: dopamine-auth-service-postgres
+    environment:
+      - POSTGRES_USERNAME=postgres
+      - POSTGRES_PASSWORD=secret
+    volumes:
+      - ./microservices/auth-service/databases/postgres/init/:/docker-entrypoint-initdb.d/
+      - ./microservices/auth-service/databases/postgres/data:/var/lib/postgresql/data
+
+  auth-service-redis:
+    image: redis:7.0.11-alpine
+    container_name: dopamine-auth-service-redis
+    command: redis-server --requirepass secret
+
+  # EMAIL SERVICE
+  email-service:
+    build:
+      dockerfile: Dockerfile
+      context: ./microservices/email-service
+      target: development
+    container_name: dopamine-email-service
+    command: bash -c "cd /usr/src/app && yarn run start:dev"
+    environment:
+      - ENV=development
+      - EMAIL_QUEUE_URLS=amqp://rabbitmq-queue:5672
+    volumes:
+      - ./microservices/email-service:/usr/src/app
+    depends_on:
+      - rabbitmq-queue
+    restart: always
+    
+  # USERS SERVICE
+  users-service:
+    build:
+      dockerfile: Dockerfile
+      context: ./microservices/users-service
+      target: development
+    container_name: dopamine-users-service
+    command: bash -c "cd /usr/src/app && yarn run start:dev"
+    volumes:
+      - ./microservices/users-service:/usr/src/app
+    environment:
+      - ENV=development
+      - PORT=3020
+      - PG_HOST=users-service-postgres
+      - PG_PORT=5432
+      - PG_USERNAME=postgres
+      - PG_PASSWORD=secret
+      - PG_DATABASE=dopamine_users
+      - AUTH_QUEUE_URLS=kafka-queue:9092
+      - AUTH_QUEUE_NAME=auth_queue
+    ports:
+      - 3020:3020
+    depends_on:
+      - users-service-postgres
+      - kafka-queue
+    restart: always
+
+  users-service-postgres:
+    image: postgres:14.5-alpine
+    container_name: dopamine-users-service-postgres
+    environment:
+      - POSTGRES_USERNAME=postgres
+      - POSTGRES_PASSWORD=secret
+    volumes:
+      - ./microservices/users-service/databases/postgres/init/:/docker-entrypoint-initdb.d/
+      - ./microservices/users-service/databases/postgres/data:/var/lib/postgresql/data
+
+  # QUEUES
+  rabbitmq-queue: 
+    image: rabbitmq:3.12.0-alpine
+    container_name: dopamine-rabbitmq-queue
+    ports:
+      - 5672:5672
+
+  kafka-queue:
+    image: bitnami/kafka:3.5-debian-11
+    container_name: dopamine-kafka-queue
+    ports:
+      - 9092:9092
+    environment:
+      - ALLOW_PLAINTEXT_LISTENER=yes
+
+
