@@ -35,7 +35,6 @@ export class UsersEmailsController {
 
     @UseGuards(JwtAccessAuthGuard)
     @Get("resend/:id")
-    @HttpCode(200)
     async resend(
         @Param("id", ParseIntPipe) emailId: number,
         @Req() req: Request,
@@ -84,8 +83,7 @@ export class UsersEmailsController {
 
     @UseGuards(JwtAccessAuthGuard)
     @Get()
-    @HttpCode(200)
-    async findAll(@Req() req: Request) {
+    async getAll(@Req() req: Request) {
         const { user } = req.user as AccessTokenPayload;
 
         const emails = await this.usersEmailsService.findAll(user.id);
@@ -101,7 +99,6 @@ export class UsersEmailsController {
     @UseFilters(DuplicateFilter)
     @UseGuards(JwtAccessAuthGuard)
     @Post()
-    @HttpCode(201)
     async create(
         @Body("email", ParseEmailPipe) email: string,
         @Req() req: Request,
@@ -111,7 +108,7 @@ export class UsersEmailsController {
         const result = await this.usersEmailsService.createOne(user.id, email);
 
         return {
-            statusCode: 200,
+            statusCode: 201,
             data: {
                 email: result,
             },
@@ -120,7 +117,6 @@ export class UsersEmailsController {
 
     @UseGuards(JwtAccessAuthGuard)
     @Delete(":id")
-    @HttpCode(200)
     async remove(
         @Param("id", ParseIntPipe) emailId: number,
         @Req() req: Request,
@@ -139,10 +135,16 @@ export class UsersEmailsController {
             throw new BadRequestException("Must be one confirmed email");
         }
 
-        await this.usersEmailsService.removeOne(user.id, email.id);
+        const count = await this.usersEmailsService.removeOne(
+            user.id,
+            email.id,
+        );
 
         return {
             statusCode: 200,
+            data: {
+                count,
+            },
         };
     }
 }

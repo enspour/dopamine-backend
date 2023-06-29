@@ -10,7 +10,7 @@ const { POSTGRES } = constants.injections;
 
 @Injectable()
 export class UsersEmailsRepository {
-    repository: Repository<UserEmailEntity>;
+    private repository: Repository<UserEmailEntity>;
 
     constructor(@Inject(POSTGRES) private postgres: DataSource) {
         this.repository = postgres.getRepository(UserEmailEntity);
@@ -42,16 +42,18 @@ export class UsersEmailsRepository {
     }
 
     async removeOne(userId: number, emailId: number) {
-        return await this.repository
+        const { affected } = await this.repository
             .createQueryBuilder()
             .delete()
             .where("user.id = :userId", { userId })
             .where("id = :emailId", { emailId })
             .execute();
+
+        return affected;
     }
 
     async updateConfirm(userId: number, emailId: number, value: boolean) {
-        return await this.repository
+        const { affected } = await this.repository
             .createQueryBuilder()
             .update()
             .set({
@@ -60,5 +62,7 @@ export class UsersEmailsRepository {
             .where("user.id = :userId", { userId })
             .where("id = :emailId", { emailId })
             .execute();
+
+        return affected;
     }
 }

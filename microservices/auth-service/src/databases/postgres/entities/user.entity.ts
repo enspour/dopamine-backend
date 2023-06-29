@@ -29,13 +29,13 @@ export class UserEntity
     @Column("text")
     avatar: string;
 
-    @CreateDateColumn({ name: "created_at" })
+    @CreateDateColumn()
     created_at: Date;
 
-    @UpdateDateColumn({ name: "modified_at" })
+    @UpdateDateColumn()
     modified_at: Date;
 
-    @OneToOne(() => UserSecurityEntity, (settings) => settings.user, {
+    @OneToOne(() => UserSecurityEntity, (security) => security.user, {
         cascade: true,
     })
     security: UserSecurityEntity;

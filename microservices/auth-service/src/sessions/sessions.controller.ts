@@ -32,7 +32,6 @@ export class SessionsController {
 
     @UseGuards(JwtAccessAuthGuard)
     @Get()
-    @HttpCode(200)
     async getAll(@Req() req: Request) {
         const { user } = req.user as AccessTokenPayload;
 
@@ -78,7 +77,6 @@ export class SessionsController {
 
     @UseGuards(JwtAccessAuthGuard)
     @Delete(":id")
-    @HttpCode(200)
     async remove(
         @Param("id", new ValidateStringPipe({ minLength: 21 })) id: string,
         @Req() req: Request,

@@ -14,7 +14,7 @@ import constants from "@constants";
 const { POSTGRES } = constants.injections;
 
 export class UsersRepository {
-    repository: Repository<UserEntity>;
+    private repository: Repository<UserEntity>;
 
     constructor(@Inject(POSTGRES) postgres: DataSource) {
         this.repository = postgres.getRepository(UserEntity);
@@ -46,6 +46,14 @@ export class UsersRepository {
         });
     }
 
+    async removeOneById(id: number) {
+        return await this.repository
+            .createQueryBuilder()
+            .delete()
+            .where("id = :id", { id })
+            .execute();
+    }
+
     async createOne(
         nickname: string,
         email: string,
@@ -74,23 +82,5 @@ export class UsersRepository {
         const { password, ...result } = saved;
 
         return result;
-    }
-
-    async removeOneById<T extends UserEntityRelationsFields = never>(
-        id: number,
-        relations: Record<T, boolean> = <Record<T, boolean>>{},
-    ): Promise<Omit<UserEntity, Exclude<UserEntityRelationsFields, T>> | null> {
-        const user = await this.repository.findOne({
-            where: {
-                id,
-            },
-            relations,
-        });
-
-        if (user) {
-            await this.repository.remove(user);
-        }
-
-        return user;
     }
 }

@@ -1,7 +1,6 @@
 import {
     Body,
     Controller,
-    HttpCode,
     ParseBoolPipe,
     Put,
     Req,
@@ -21,17 +20,22 @@ export class UsersSecurityController {
 
     @UseGuards(JwtAccessAuthGuard)
     @Put("TFA-by-email")
-    @HttpCode(200)
     async updateTFAByEmail(
         @Body("value", ParseBoolPipe) value: boolean,
         @Req() req: Request,
     ) {
         const { user } = req.user as AccessTokenPayload;
 
-        await this.usersSecurityService.updateTFAByEmail(user.id, value);
+        const count = await this.usersSecurityService.updateTFAByEmail(
+            user.id,
+            value,
+        );
 
         return {
             statusCode: 200,
+            data: {
+                count,
+            },
         };
     }
 }

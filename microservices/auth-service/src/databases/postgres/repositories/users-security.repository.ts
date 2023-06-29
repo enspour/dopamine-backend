@@ -9,14 +9,14 @@ const { POSTGRES } = constants.injections;
 
 @Injectable()
 export class UsersSecurityRepository {
-    repository: Repository<UserSecurityEntity>;
+    private repository: Repository<UserSecurityEntity>;
 
     constructor(@Inject(POSTGRES) postgres: DataSource) {
         this.repository = postgres.getRepository(UserSecurityEntity);
     }
 
     async updateTFAByEmail(userId: number, value: boolean) {
-        return await this.repository
+        const { affected } = await this.repository
             .createQueryBuilder()
             .update()
             .set({
@@ -24,5 +24,7 @@ export class UsersSecurityRepository {
             })
             .where("user.id = :userId", { userId })
             .execute();
+
+        return affected;
     }
 }
