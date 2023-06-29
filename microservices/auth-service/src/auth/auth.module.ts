@@ -1,6 +1,7 @@
 import { Module } from "@nestjs/common";
 import { PassportModule } from "@nestjs/passport";
 
+import { AuthQueueModule } from "@auth-queue/auth-queue.module";
 import { SessionsModule } from "@sessions/sessions.module";
 import { TFAModule } from "@tfa/tfa.module";
 import { UsersEmailsModule } from "@users-emails/users-emails.module";
@@ -16,6 +17,7 @@ import { LocalStrategy } from "./strategies/local.strategy";
 
 @Module({
     imports: [
+        AuthQueueModule,
         PassportModule,
         SessionsModule,
         TFAModule,
