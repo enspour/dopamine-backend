@@ -1,0 +1,35 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "declaration": true,
+        "removeComments": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "allowSyntheticDefaultImports": true,
+        "target": "es2017",
+        "sourceMap": true,
+        "outDir": "./dist",
+        "baseUrl": "./",
+        "paths": {
+            "@configs": ["src/configs"],
+            "@constants": ["src/constants"],
+            "@interfaces": ["src/interfaces"],
+            "@pipes": ["src/common/pipes"],
+            "@filters": ["src/common/filters"],
+
+            "@guards/*": ["src/auth/guards/*"],
+            "@auth/*": ["src/auth/*"],
+            "@postgres/*": ["src/databases/postgres/*"],
+            "@users/*": ["src/users/*"],
+            "@followings/*": ["src/followings/*"],
+            "@strategies/*": ["src/auth/strategies/*"]
+        },
+        "incremental": true,
+        "skipLibCheck": true,
+        "strictNullChecks": false,
+        "noImplicitAny": false,
+        "strictBindCallApply": false,
+        "forceConsistentCasingInFileNames": false,
+        "noFallthroughCasesInSwitch": false
+    }
+}
