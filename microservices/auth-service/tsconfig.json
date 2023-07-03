@@ -26,14 +26,14 @@
             "@email-queue/*": ["src/queues/email-queue/*"],
             "@auth-queue/*": ["src/queues/auth-queue/*"],
 
-            "@auth-guards/*": ["src/auth/guards/*"],
-            "@auth/*": ["src/auth/*"],
-            "@jwt/*": ["src/jwt/*"],
-            "@sessions/*": ["src/sessions/*"],
-            "@users-emails/*": ["src/users-emails/*"],
-            "@users-security/*": ["src/users-security/*"],
-            "@users/*": ["src/users/*"],
-            "@tfa/*": ["src/tfa/*"]
+            "@auth-guards/*": ["src/modules/auth/guards/*"],
+            "@auth/*": ["src/modules/auth/*"],
+            "@jwt/*": ["src/modules/jwt/*"],
+            "@sessions/*": ["src/modules/sessions/*"],
+            "@users-emails/*": ["src/modules/users-emails/*"],
+            "@users-security/*": ["src/modules/users-security/*"],
+            "@users/*": ["src/modules/users/*"],
+            "@tfa/*": ["src/modules/tfa/*"]
         },
         "incremental": true,
         "skipLibCheck": true,

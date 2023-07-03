@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
 
-import { PostgresModule } from "src/databases/postgres/postgres.module";
+import { PostgresModule } from "@postgres/postgres.module";
 
 import { UsersService } from "./users.service";
 
