@@ -3,7 +3,7 @@ import { Request } from "express";
 
 import { FollowersService } from "./followers.service";
 
-import { JwtAccessAuthGuard } from "@guards/jwt-access.guard";
+import { JwtAccessAuthGuard } from "@auth-guards/jwt-access.guard";
 
 import { AccessTokenPayload } from "@auth/strategies/jwt-access.strategy";
 

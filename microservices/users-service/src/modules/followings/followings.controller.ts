@@ -15,9 +15,9 @@ import { Request } from "express";
 import { UsersService } from "@users/users.service";
 import { FollowingsService } from "./followings.service";
 
-import { JwtAccessAuthGuard } from "@guards/jwt-access.guard";
+import { JwtAccessAuthGuard } from "@auth-guards/jwt-access.guard";
 
-import { AccessTokenPayload } from "@strategies/jwt-access.strategy";
+import { AccessTokenPayload } from "@auth-strategies/jwt-access.strategy";
 
 @Controller("followings")
 export class FollowingsController {

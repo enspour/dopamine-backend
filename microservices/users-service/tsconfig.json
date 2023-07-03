@@ -17,12 +17,16 @@
             "@pipes": ["src/common/pipes"],
             "@filters": ["src/common/filters"],
 
-            "@guards/*": ["src/auth/guards/*"],
-            "@auth/*": ["src/auth/*"],
             "@postgres/*": ["src/databases/postgres/*"],
-            "@users/*": ["src/users/*"],
-            "@followings/*": ["src/followings/*"],
-            "@strategies/*": ["src/auth/strategies/*"]
+
+            "@auth-queue/*": ["src/queues/auth-queue/*"],
+
+            "@auth-guards/*": ["src/modules/auth/guards/*"],
+            "@auth-strategies/*": ["src/modules/auth/strategies/*"],
+            "@auth/*": ["src/modules/auth/*"],
+            "@users/*": ["src/modules/users/*"],
+            "@followings/*": ["src/modules/followings/*"],
+            "@followers/*": ["src/modules/followers/*"]
         },
         "incremental": true,
         "skipLibCheck": true,

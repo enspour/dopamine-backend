@@ -13,14 +13,14 @@ import { Request } from "express";
 
 import { UsersService } from "./users.service";
 
-import { JwtAccessAuthGuard } from "@guards/jwt-access.guard";
+import { JwtAccessAuthGuard } from "@auth-guards/jwt-access.guard";
 
 import avatarValidator from "./validators/avatar.validator";
 import nameValidator from "./validators/name.validator";
 import nicknameValidator from "./validators/nickname.validator";
 import statusValidator from "./validators/status.validator";
 
-import { AccessTokenPayload } from "@strategies/jwt-access.strategy";
+import { AccessTokenPayload } from "@auth-strategies/jwt-access.strategy";
 
 @Controller("users")
 export class UsersController {
