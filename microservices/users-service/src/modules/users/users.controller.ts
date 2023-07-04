@@ -1,4 +1,5 @@
 import {
+    BadRequestException,
     Body,
     Controller,
     Get,
@@ -67,11 +68,12 @@ export class UsersController {
 
         const count = await this.usersService.updateName(user.id, name);
 
+        if (!count) {
+            throw new BadRequestException("The same name exists");
+        }
+
         return {
             statusCode: 200,
-            data: {
-                count,
-            },
         };
     }
 
@@ -83,13 +85,10 @@ export class UsersController {
     ) {
         const { user } = req.user as AccessTokenPayload;
 
-        const count = await this.usersService.updateNickname(user.id, nickname);
+        await this.usersService.updateNickname(user.id, nickname);
 
         return {
             statusCode: 200,
-            data: {
-                count,
-            },
         };
     }
 
@@ -101,13 +100,10 @@ export class UsersController {
     ) {
         const { user } = req.user as AccessTokenPayload;
 
-        const count = await this.usersService.updateStatus(user.id, status);
+        await this.usersService.updateStatus(user.id, status);
 
         return {
             statusCode: 200,
-            data: {
-                count,
-            },
         };
     }
 
@@ -119,13 +115,10 @@ export class UsersController {
     ) {
         const { user } = req.user as AccessTokenPayload;
 
-        const count = await this.usersService.updateAvatar(user.id, avatar);
+        await this.usersService.updateAvatar(user.id, avatar);
 
         return {
             statusCode: 200,
-            data: {
-                count,
-            },
         };
     }
 }

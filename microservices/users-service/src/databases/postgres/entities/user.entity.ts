@@ -7,19 +7,18 @@ import {
     UpdateDateColumn,
 } from "typeorm";
 
-import { User } from "@interfaces";
 import { FollowingEntity } from "./following.entity";
 
-export type UserEntityRelationsFields = "followers" | "followings";
+import { User } from "@interfaces";
+
+export type UserEntityFKNames = "followers" | "followings";
 export type UserEntityUpdatedFields = keyof Omit<
     UserEntity,
-    UserEntityRelationsFields | "id" | "created_at" | "modified_at"
+    UserEntityFKNames | "id" | "created_at" | "modified_at"
 >;
 
 @Entity({ name: "users" })
-export class UserEntity
-    implements User, Record<UserEntityRelationsFields, any>
-{
+export class UserEntity implements User, Record<UserEntityFKNames, any> {
     @PrimaryColumn()
     id: number;
 

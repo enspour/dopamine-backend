@@ -10,7 +10,7 @@ export class UsersService {
         return await this.usersRepository.findOneById(id);
     }
 
-    async createOne(id: number, nickname: string) {
+    async create(id: number, nickname: string) {
         return await this.usersRepository.createOne(id, nickname);
     }
 

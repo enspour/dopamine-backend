@@ -3,7 +3,7 @@ import { DataSource, Repository } from "typeorm";
 
 import {
     UserEntity,
-    UserEntityRelationsFields,
+    UserEntityFKNames,
     UserEntityUpdatedFields,
 } from "@postgres/entities/user.entity";
 
@@ -33,10 +33,10 @@ export class UsersRepository {
         return result;
     }
 
-    async findOneById<T extends UserEntityRelationsFields = never>(
+    async findOneById<T extends UserEntityFKNames = never>(
         id: number,
         relations: Record<T, boolean> = <Record<T, boolean>>{},
-    ): Promise<Omit<UserEntity, Exclude<UserEntityRelationsFields, T>> | null> {
+    ): Promise<Omit<UserEntity, Exclude<UserEntityFKNames, T>> | null> {
         return await this.repository.findOne({
             where: {
                 id,

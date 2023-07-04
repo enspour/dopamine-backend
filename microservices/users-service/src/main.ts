@@ -21,10 +21,11 @@ async function bootstrap() {
         transport: Transport.KAFKA,
         options: {
             client: {
+                clientId: queue,
                 brokers: urls,
             },
             consumer: {
-                groupId: queue,
+                groupId: "users-service",
             },
         },
     });

@@ -9,7 +9,7 @@ import {
 
 import { UserEntity } from "./user.entity";
 
-export type FollowingEntityRelationsFields = "follower" | "user";
+export type FollowingEntityFKNames = "follower" | "user";
 
 @Entity({ name: "followings" })
 export class FollowingEntity {

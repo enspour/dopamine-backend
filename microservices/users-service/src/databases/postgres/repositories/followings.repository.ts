@@ -3,7 +3,7 @@ import { DataSource, Repository } from "typeorm";
 
 import {
     FollowingEntity,
-    FollowingEntityRelationsFields,
+    FollowingEntityFKNames,
 } from "@postgres/entities/following.entity";
 
 import constants from "@constants";
@@ -17,12 +17,10 @@ export class FollowingsRepository {
         this.repository = postgres.getRepository(FollowingEntity);
     }
 
-    async findAllFollowers<T extends FollowingEntityRelationsFields = never>(
+    async findAllFollowers<T extends FollowingEntityFKNames = never>(
         user_id: number,
         relations: Record<T, boolean> = <Record<T, boolean>>{},
-    ): Promise<
-        Omit<FollowingEntity, Exclude<FollowingEntityRelationsFields, T>>[]
-    > {
+    ): Promise<Omit<FollowingEntity, Exclude<FollowingEntityFKNames, T>>[]> {
         return await this.repository.find({
             where: {
                 user_id,
@@ -31,12 +29,10 @@ export class FollowingsRepository {
         });
     }
 
-    async findAllFollowings<T extends FollowingEntityRelationsFields = never>(
+    async findAllFollowings<T extends FollowingEntityFKNames = never>(
         user_id: number,
         relations: Record<T, boolean> = <Record<T, boolean>>{},
-    ): Promise<
-        Omit<FollowingEntity, Exclude<FollowingEntityRelationsFields, T>>[]
-    > {
+    ): Promise<Omit<FollowingEntity, Exclude<FollowingEntityFKNames, T>>[]> {
         return await this.repository.find({
             where: {
                 follower_id: user_id,
