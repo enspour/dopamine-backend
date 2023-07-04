@@ -135,16 +135,10 @@ export class UsersEmailsController {
             throw new BadRequestException("Must be one confirmed email");
         }
 
-        const count = await this.usersEmailsService.removeOne(
-            user.id,
-            email.id,
-        );
+        await this.usersEmailsService.removeOne(user.id, email.id);
 
         return {
             statusCode: 200,
-            data: {
-                count,
-            },
         };
     }
 }

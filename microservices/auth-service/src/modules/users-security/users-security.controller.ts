@@ -26,16 +26,10 @@ export class UsersSecurityController {
     ) {
         const { user } = req.user as AccessTokenPayload;
 
-        const count = await this.usersSecurityService.updateTFAByEmail(
-            user.id,
-            value,
-        );
+        await this.usersSecurityService.updateTFAByEmail(user.id, value);
 
         return {
             statusCode: 200,
-            data: {
-                count,
-            },
         };
     }
 }

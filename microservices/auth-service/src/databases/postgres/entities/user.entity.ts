@@ -14,12 +14,10 @@ import { UserSecurityEntity } from "./user-security.entity";
 
 import { User } from "@interfaces";
 
-export type UserEntityRelationsFields = "security" | "emails" | "password";
+export type UserEntityFKNames = "security" | "emails" | "password";
 
 @Entity({ name: "users" })
-export class UserEntity
-    implements User, Record<UserEntityRelationsFields, any>
-{
+export class UserEntity implements User, Record<UserEntityFKNames, any> {
     @PrimaryGeneratedColumn("increment")
     id: number;
 

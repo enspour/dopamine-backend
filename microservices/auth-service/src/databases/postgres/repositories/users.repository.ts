@@ -4,10 +4,7 @@ import { DataSource, Repository } from "typeorm";
 import { UserEmailEntity } from "@postgres/entities/user-email.entity";
 import { UserPasswordEntity } from "@postgres/entities/user-password.entity";
 import { UserSecurityEntity } from "@postgres/entities/user-security.entity";
-import {
-    UserEntity,
-    UserEntityRelationsFields,
-} from "@postgres/entities/user.entity";
+import { UserEntity, UserEntityFKNames } from "@postgres/entities/user.entity";
 
 import constants from "@constants";
 
@@ -20,10 +17,10 @@ export class UsersRepository {
         this.repository = postgres.getRepository(UserEntity);
     }
 
-    async findOneById<T extends UserEntityRelationsFields = never>(
+    async findOneById<T extends UserEntityFKNames = never>(
         id: number,
         relations: Record<T, boolean> = <Record<T, boolean>>{},
-    ): Promise<Omit<UserEntity, Exclude<UserEntityRelationsFields, T>> | null> {
+    ): Promise<Omit<UserEntity, Exclude<UserEntityFKNames, T>> | null> {
         return await this.repository.findOne({
             where: {
                 id,
@@ -32,10 +29,10 @@ export class UsersRepository {
         });
     }
 
-    async findOneByEmail<T extends UserEntityRelationsFields = never>(
+    async findOneByEmail<T extends UserEntityFKNames = never>(
         email: string,
         relations: Record<T, boolean> = <Record<T, boolean>>{},
-    ): Promise<Omit<UserEntity, Exclude<UserEntityRelationsFields, T>> | null> {
+    ): Promise<Omit<UserEntity, Exclude<UserEntityFKNames, T>> | null> {
         return await this.repository.findOne({
             where: {
                 emails: {
