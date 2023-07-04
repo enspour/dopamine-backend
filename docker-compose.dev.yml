@@ -104,6 +104,43 @@ services:
       - ./microservices/users-service/databases/postgres/init/:/docker-entrypoint-initdb.d/
       - ./microservices/users-service/databases/postgres/data:/var/lib/postgresql/data
 
+  # POSTS SERVICE
+  posts-service:
+    build:
+      dockerfile: Dockerfile
+      context: ./microservices/posts-service
+      target: development
+    container_name: dopamine-posts-service
+    command: bash -c "cd /usr/src/app && yarn run start:dev"
+    volumes:
+      - ./microservices/posts-service:/usr/src/app
+    environment:
+      - ENV=development
+      - PORT=3030
+      - MONGO_HOST=posts-service-mongodb
+      - MONGO_PORT=27017
+      - MONGO_USER=mongodb
+      - MONGO_PASS=secret
+      - MONGO_DB=dopamine_posts
+      - AUTH_QUEUE_URLS=kafka-queue:9092
+      - AUTH_QUEUE_NAME=auth_queue
+    ports:
+      - 3030:3030
+    depends_on:
+      - posts-service-mongodb
+      - kafka-queue
+    restart: always
+
+  posts-service-mongodb:
+    image: mongo:6.0-jammy
+    container_name: dopamine-posts-service-mongodb
+    volumes:
+      - ./microservices/posts-service/databases/mongodb/data:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=mongodb
+      - MONGO_INITDB_ROOT_PASSWORD=secret
+      - MONGO_INITDB_DATABASE=dopamine_posts
+
   # QUEUES
   rabbitmq-queue: 
     image: rabbitmq:3.12.0-alpine
