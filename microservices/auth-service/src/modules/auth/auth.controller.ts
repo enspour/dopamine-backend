@@ -59,7 +59,7 @@ export class AuthController {
 
         const { id, emails } = user;
 
-        await this.authQueueService.createUser(id, nickname);
+        this.authQueueService.createUser(id, nickname);
 
         await this.usersEmailsService.sendConfirmationEmail(id, emails[0]);
 

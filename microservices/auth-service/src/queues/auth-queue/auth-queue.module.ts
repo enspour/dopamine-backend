@@ -17,8 +17,6 @@ export class AuthQueueModule {
     constructor(@Inject(AUTH_QUEUE) private queue: ClientKafka) {}
 
     async onModuleInit() {
-        this.queue.subscribeToResponseOf("auth.users.create");
-
         try {
             await this.queue.connect();
         } catch (e) {

@@ -15,11 +15,8 @@ export const AuthQueueProvider = {
             transport: Transport.KAFKA,
             options: {
                 client: {
-                    clientId: "auth-service",
+                    clientId: queue,
                     brokers: urls,
-                },
-                consumer: {
-                    groupId: queue,
                 },
             },
         });
