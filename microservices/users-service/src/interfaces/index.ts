@@ -1,4 +1,2 @@
-import Following from "./follower.interface";
-import User from "./user.interface";
-
-export type { Following, User };
+export * from "./follower.interface";
+export * from "./user.interface";

@@ -1,6 +1,6 @@
-import User from "./user.interface";
+import { User } from "./user.interface";
 
-export default interface Following {
+export interface Following {
     user: User;
     follower: User;
     created_at: Date;

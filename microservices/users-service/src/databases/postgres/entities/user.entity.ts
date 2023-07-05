@@ -9,16 +9,10 @@ import {
 
 import { FollowingEntity } from "./following.entity";
 
-import { User } from "@interfaces";
-
 export type UserEntityFKNames = "followers" | "followings";
-export type UserEntityUpdatedFields = keyof Omit<
-    UserEntity,
-    UserEntityFKNames | "id" | "created_at" | "modified_at"
->;
 
 @Entity({ name: "users" })
-export class UserEntity implements User, Record<UserEntityFKNames, any> {
+export class UserEntity {
     @PrimaryColumn()
     id: number;
 

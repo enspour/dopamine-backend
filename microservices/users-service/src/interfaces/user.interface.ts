@@ -1,6 +1,6 @@
-import Following from "./follower.interface";
+import { Following } from "./follower.interface";
 
-export default interface User {
+export interface User {
     id: number;
     nickname: string;
     name: string;
@@ -11,3 +11,12 @@ export default interface User {
     followers: Following[];
     followings: Following[];
 }
+
+export const userUpdatedFieldsNames = [
+    "nickname",
+    "name",
+    "avatar",
+    "status",
+] as const;
+
+export type UserUpdatedFieldsNames = (typeof userUpdatedFieldsNames)[number];

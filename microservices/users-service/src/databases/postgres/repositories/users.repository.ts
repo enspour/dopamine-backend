@@ -1,11 +1,9 @@
 import { Inject } from "@nestjs/common";
 import { DataSource, Repository } from "typeorm";
 
-import {
-    UserEntity,
-    UserEntityFKNames,
-    UserEntityUpdatedFields,
-} from "@postgres/entities/user.entity";
+import { UserEntity, UserEntityFKNames } from "@postgres/entities/user.entity";
+
+import { UserUpdatedFieldsNames } from "@interfaces";
 
 import constants from "@constants";
 
@@ -46,21 +44,19 @@ export class UsersRepository {
     }
 
     async removeOneById(id: number) {
-        const { affected } = await this.repository
+        return await this.repository
             .createQueryBuilder()
             .delete()
             .where("id = :id", { id })
             .execute();
-
-        return affected;
     }
 
-    async updateOneById<K extends UserEntityUpdatedFields>(
+    async updateOneById<K extends UserUpdatedFieldsNames>(
         id: number,
         field: K,
         value: UserEntity[K],
     ) {
-        const { affected } = await this.repository
+        return await this.repository
             .createQueryBuilder()
             .update()
             .set({
@@ -68,7 +64,5 @@ export class UsersRepository {
             })
             .where("id = :id", { id })
             .execute();
-
-        return affected;
     }
 }
