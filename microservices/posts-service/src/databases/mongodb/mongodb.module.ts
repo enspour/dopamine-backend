@@ -1,8 +1,8 @@
 import { Module } from "@nestjs/common";
 import { MongooseModule } from "@nestjs/mongoose";
 
-import { Post, PostSchema } from "./schemas/post.schema";
-import { User, UserSchema } from "./schemas/user.schema";
+import { PostEntity, PostSchema } from "./schemas/post.schema";
+import { UserEntity, UserSchema } from "./schemas/user.schema";
 
 import { PostsRepository } from "./repositories/posts.repository";
 import { UsersRepository } from "./repositories/users.repository";
@@ -17,8 +17,8 @@ const { host, port, pass, user, db } = configs.mongodb;
             `mongodb://${user}:${pass}@${host}:${port}/${db}?authSource=admin`,
         ),
         MongooseModule.forFeature([
-            { name: User.name, schema: UserSchema },
-            { name: Post.name, schema: PostSchema },
+            { name: UserEntity.name, schema: UserSchema },
+            { name: PostEntity.name, schema: PostSchema },
         ]),
     ],
     providers: [UsersRepository, PostsRepository],

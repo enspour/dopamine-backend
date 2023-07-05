@@ -2,17 +2,19 @@ import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 
-import { Post, PostFKNames } from "@mongodb/schemas/post.schema";
+import { PostEntity, PostEntityFKNames } from "@mongodb/schemas/post.schema";
 
 @Injectable()
 export class PostsRepository {
-    constructor(@InjectModel(Post.name) private postModel: Model<Post>) {}
+    constructor(
+        @InjectModel(PostEntity.name) private postModel: Model<PostEntity>,
+    ) {}
 
     async createOne(
         text: string,
         images: string[],
         ownerId: number,
-    ): Promise<Post> {
+    ): Promise<PostEntity> {
         const post = new this.postModel({
             text,
             images,
@@ -22,10 +24,10 @@ export class PostsRepository {
         return await post.save();
     }
 
-    async updateOne<T extends keyof Post>(
+    async updateOne<T extends keyof PostEntity>(
         id: string,
         field: T,
-        value: Post[T],
+        value: PostEntity[T],
     ) {
         return await this.postModel
             .updateOne(
@@ -44,10 +46,10 @@ export class PostsRepository {
         return await this.postModel.deleteOne({ _id: id }).exec();
     }
 
-    async findOneById<T extends PostFKNames = never>(
+    async findOneById<T extends PostEntityFKNames = never>(
         id: string,
         relations: Record<T, boolean> = <Record<T, boolean>>{},
-    ): Promise<Omit<Post, Exclude<PostFKNames, T>> | null> {
+    ): Promise<Omit<PostEntity, Exclude<PostEntityFKNames, T>> | null> {
         const query = this.postModel.findById(id);
 
         for (let relation in relations) {

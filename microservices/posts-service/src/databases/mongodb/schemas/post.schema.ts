@@ -1,14 +1,14 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import mongoose, { HydratedDocument } from "mongoose";
 
-import { User } from "./user.schema";
+import { UserEntity } from "./user.schema";
 
-export type PostDocument = HydratedDocument<Post>;
+export type PostDocument = HydratedDocument<PostEntity>;
 
-export type PostFKNames = "owner" | "likes" | "comments";
+export type PostEntityFKNames = "owner" | "likes" | "comments";
 
 @Schema()
-export class Post implements Record<PostFKNames, any> {
+export class PostEntity implements Record<PostEntityFKNames, any> {
     @Prop({ default: "" })
     text: string;
 
@@ -16,19 +16,19 @@ export class Post implements Record<PostFKNames, any> {
     images: string[];
 
     @Prop({
-        type: [{ type: mongoose.Schema.Types.Number, ref: "User" }],
+        type: [{ type: mongoose.Schema.Types.Number, ref: "UserEntity" }],
         default: [],
     })
-    likes: User[];
+    likes: UserEntity[];
 
-    @Prop({ type: mongoose.Schema.Types.Number, ref: "User" })
-    owner: User;
+    @Prop({ type: mongoose.Schema.Types.Number, ref: "UserEntity" })
+    owner: UserEntity;
 
     @Prop({
-        type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post" }],
+        type: [{ type: mongoose.Schema.Types.ObjectId, ref: "PostEntity" }],
         default: [],
     })
-    comments: Post[];
+    comments: PostEntity[];
 
     @Prop({ default: Date.now })
     created_at: Date;
@@ -37,4 +37,4 @@ export class Post implements Record<PostFKNames, any> {
     modified_at: Date;
 }
 
-export const PostSchema = SchemaFactory.createForClass(Post);
+export const PostSchema = SchemaFactory.createForClass(PostEntity);
