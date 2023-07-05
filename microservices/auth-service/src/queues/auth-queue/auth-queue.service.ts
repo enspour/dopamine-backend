@@ -12,7 +12,9 @@ export class AuthQueueService {
     constructor(@Inject(AUTH_QUEUE) private queue: ClientKafka) {}
 
     createUser(id: number, nickname: string) {
-        const data: CreateUserDto = { id, nickname };
+        const user: CreateUserDto = { id, nickname };
+
+        const data = JSON.stringify(user);
 
         this.queue.emit("auth.create.user", data);
     }

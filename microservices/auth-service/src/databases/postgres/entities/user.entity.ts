@@ -12,12 +12,10 @@ import { UserEmailEntity } from "./user-email.entity";
 import { UserPasswordEntity } from "./user-password.entity";
 import { UserSecurityEntity } from "./user-security.entity";
 
-import { User } from "@interfaces";
-
 export type UserEntityFKNames = "security" | "emails" | "password";
 
 @Entity({ name: "users" })
-export class UserEntity implements User, Record<UserEntityFKNames, any> {
+export class UserEntity {
     @PrimaryGeneratedColumn("increment")
     id: number;
 

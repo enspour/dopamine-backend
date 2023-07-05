@@ -11,7 +11,6 @@ import {
 } from "@nestjs/common";
 import { Request, Response } from "express";
 
-import { AuthQueueService } from "@auth-queue/auth-queue.service";
 import { AuthService } from "@auth/auth.service";
 import { SessionsService } from "@sessions/sessions.service";
 import { TFAService } from "@tfa/tfa.service";
@@ -37,7 +36,6 @@ export class AuthController {
         private tfaService: TFAService,
         private sessionsService: SessionsService,
         private usersEmailsService: UsersEmailsService,
-        private authQueueService: AuthQueueService,
     ) {}
 
     @Post("signup")
@@ -58,8 +56,6 @@ export class AuthController {
         );
 
         const { id, emails } = user;
-
-        this.authQueueService.createUser(id, nickname);
 
         await this.usersEmailsService.sendConfirmationEmail(id, emails[0]);
 

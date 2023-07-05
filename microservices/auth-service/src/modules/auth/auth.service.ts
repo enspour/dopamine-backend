@@ -1,11 +1,15 @@
 import { Injectable } from "@nestjs/common";
 import * as bcrypt from "bcryptjs";
 
+import { AuthQueueService } from "@auth-queue/auth-queue.service";
 import { UsersService } from "@users/users.service";
 
 @Injectable()
 export class AuthService {
-    constructor(private usersService: UsersService) {}
+    constructor(
+        private usersService: UsersService,
+        private authQueueService: AuthQueueService,
+    ) {}
 
     async validatePassword(hashedPassword: string, password: string) {
         return await bcrypt.compare(password, hashedPassword);
@@ -15,10 +19,14 @@ export class AuthService {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        return await this.usersService.createOne(
+        const user = await this.usersService.createOne(
             nickname,
             email,
             hashedPassword,
         );
+
+        this.authQueueService.createUser(user.id, user.nickname);
+
+        return user;
     }
 }

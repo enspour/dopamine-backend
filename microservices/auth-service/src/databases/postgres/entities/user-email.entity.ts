@@ -9,10 +9,8 @@ import {
 
 import { UserEntity } from "./user.entity";
 
-import { UserEmail } from "@interfaces";
-
 @Entity({ name: "users_emails" })
-export class UserEmailEntity implements UserEmail {
+export class UserEmailEntity {
     @PrimaryGeneratedColumn()
     id: number;
 

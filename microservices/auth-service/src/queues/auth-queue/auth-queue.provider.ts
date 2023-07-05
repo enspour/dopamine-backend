@@ -10,7 +10,7 @@ const { urls, queue } = configs.authQueue;
 
 export const AuthQueueProvider = {
     provide: AUTH_QUEUE,
-    useFactory: async () => {
+    useFactory: () => {
         const client = ClientProxyFactory.create({
             transport: Transport.KAFKA,
             options: {

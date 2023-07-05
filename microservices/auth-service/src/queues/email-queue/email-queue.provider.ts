@@ -10,7 +10,7 @@ const { urls, queue } = configs.emailQueue;
 
 export const EmailQueueProvider = {
     provide: EMAIL_QUEUE,
-    useFactory: async () => {
+    useFactory: () => {
         const client = ClientProxyFactory.create({
             transport: Transport.RMQ,
             options: {

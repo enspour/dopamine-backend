@@ -10,10 +10,8 @@ import {
 
 import { UserEntity } from "./user.entity";
 
-import { UserSecurity } from "@interfaces";
-
 @Entity({ name: "users_security" })
-export class UserSecurityEntity implements UserSecurity {
+export class UserSecurityEntity {
     @PrimaryGeneratedColumn()
     id: number;
 

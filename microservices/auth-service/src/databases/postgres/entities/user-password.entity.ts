@@ -10,10 +10,8 @@ import {
 
 import { UserEntity } from "./user.entity";
 
-import { UserPassword } from "@interfaces";
-
 @Entity({ name: "users_passwords" })
-export class UserPasswordEntity implements UserPassword {
+export class UserPasswordEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
