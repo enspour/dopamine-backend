@@ -1,4 +1,4 @@
-export default interface UserEmail {
+export interface UserEmail {
     id: number;
     email: string;
     confirm: boolean;

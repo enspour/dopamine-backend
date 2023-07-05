@@ -1,16 +1,16 @@
 import { NestFactory } from "@nestjs/core";
-import { MicroserviceOptions, Transport } from "@nestjs/microservices";
 import * as cookieParser from "cookie-parser";
 
 import { AppModule } from "./app.module";
+
+import { connectAuthQueue } from "@loaders/connect-auth-queue";
+import { connectUsersQueue } from "@loaders/connect-users-queue";
 
 import { ValidationPipe } from "@pipes";
 
 import configs from "@configs";
 
 const { port } = configs.server;
-
-const { urls, queue } = configs.authQueue;
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
@@ -21,18 +21,8 @@ async function bootstrap() {
 
     app.useGlobalPipes(new ValidationPipe());
 
-    app.connectMicroservice<MicroserviceOptions>({
-        transport: Transport.KAFKA,
-        options: {
-            client: {
-                clientId: queue,
-                brokers: urls,
-            },
-            consumer: {
-                groupId: "posts-service",
-            },
-        },
-    });
+    connectAuthQueue(app);
+    connectUsersQueue(app);
 
     await app.startAllMicroservices();
     await app.listen(port);

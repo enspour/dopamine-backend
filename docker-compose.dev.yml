@@ -24,6 +24,8 @@ services:
       - EMAIL_QUEUE_NAME=email_queue
       - AUTH_QUEUE_URLS=kafka-queue:9092
       - AUTH_QUEUE_NAME=auth_queue
+      - USERS_QUEUE_URLS=kafka-queue:9092
+      - USERS_QUEUE_NAME=users_queue
     volumes:
       - ./microservices/auth-service:/usr/src/app
     ports:
@@ -87,6 +89,8 @@ services:
       - PG_DATABASE=dopamine_users
       - AUTH_QUEUE_URLS=kafka-queue:9092
       - AUTH_QUEUE_NAME=auth_queue
+      - USERS_QUEUE_URLS=kafka-queue:9092
+      - USERS_QUEUE_NAME=users_queue
     ports:
       - 3020:3020
     depends_on:
@@ -124,6 +128,8 @@ services:
       - MONGO_DB=dopamine_posts
       - AUTH_QUEUE_URLS=kafka-queue:9092
       - AUTH_QUEUE_NAME=auth_queue
+      - USERS_QUEUE_URLS=kafka-queue:9092
+      - USERS_QUEUE_NAME=users_queue
     ports:
       - 3030:3030
     depends_on:

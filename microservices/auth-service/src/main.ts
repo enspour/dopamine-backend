@@ -3,6 +3,8 @@ import * as cookieParser from "cookie-parser";
 
 import { AppModule } from "./app.module";
 
+import { connectUsersQueue } from "@loaders/connect-users-queue";
+
 import { ValidationPipe } from "@pipes";
 
 import configs from "@configs";
@@ -18,6 +20,9 @@ async function bootstrap() {
 
     app.setGlobalPrefix("/api/v1");
 
+    connectUsersQueue(app);
+
+    await app.startAllMicroservices();
     await app.listen(port);
 }
 

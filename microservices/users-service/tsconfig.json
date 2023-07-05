@@ -17,9 +17,12 @@
             "@pipes": ["src/common/pipes"],
             "@filters": ["src/common/filters"],
 
+            "@loaders/*": ["src/loaders/*"],
+
             "@postgres/*": ["src/databases/postgres/*"],
 
             "@auth-queue/*": ["src/queues/auth-queue/*"],
+            "@users-queue/*": ["src/queues/users-queue/*"],
 
             "@auth-guards/*": ["src/modules/auth/guards/*"],
             "@auth-strategies/*": ["src/modules/auth/strategies/*"],

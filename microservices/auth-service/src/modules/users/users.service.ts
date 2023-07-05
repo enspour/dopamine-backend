@@ -2,6 +2,8 @@ import { Injectable } from "@nestjs/common";
 
 import { UsersRepository } from "@postgres/repositories/users.repository";
 
+import { User, UserUpdatedFieldsNames } from "@interfaces";
+
 @Injectable()
 export class UsersService {
     constructor(private usersRepository: UsersRepository) {}
@@ -26,11 +28,19 @@ export class UsersService {
         });
     }
 
-    async createOne(nickname: string, email: string, hashedPassword: string) {
+    async create(nickname: string, email: string, hashedPassword: string) {
         return await this.usersRepository.createOne(
             nickname,
             email,
             hashedPassword,
         );
+    }
+
+    async update<K extends UserUpdatedFieldsNames>(
+        id: number,
+        field: K,
+        value: User[K],
+    ) {
+        return await this.usersRepository.updateOneById(id, field, value);
     }
 }

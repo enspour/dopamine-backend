@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 
 import { UsersRepository } from "@mongodb/repositories/users.repository";
 
-import { User } from "@interfaces";
+import { User, UserUpdatedFieldsNames } from "@interfaces";
 
 @Injectable()
 export class UsersService {
@@ -12,10 +12,10 @@ export class UsersService {
         return await this.usersRepository.createOne(id, nickname);
     }
 
-    async updateField<T extends keyof Omit<User, "id">>(
+    async update<K extends UserUpdatedFieldsNames>(
         id: number,
-        field: T,
-        value: User[T],
+        field: K,
+        value: User[K],
     ) {
         return await this.usersRepository.updateOne(id, field, value);
     }

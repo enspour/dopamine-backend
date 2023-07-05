@@ -1,6 +1,4 @@
-import UserEmail from "./user-email.interface";
-import UserPassword from "./user-password.interface";
-import UserSecurity from "./user-security.interface";
-import User from "./user.interface";
-
-export type { User, UserEmail, UserPassword, UserSecurity };
+export * from "./user-email.interface";
+export * from "./user-password.interface";
+export * from "./user-security.interface";
+export * from "./user.interface";

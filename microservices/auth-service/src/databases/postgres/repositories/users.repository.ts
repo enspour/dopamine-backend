@@ -6,6 +6,8 @@ import { UserPasswordEntity } from "@postgres/entities/user-password.entity";
 import { UserSecurityEntity } from "@postgres/entities/user-security.entity";
 import { UserEntity, UserEntityFKNames } from "@postgres/entities/user.entity";
 
+import { UserUpdatedFieldsNames } from "@interfaces";
+
 import constants from "@constants";
 
 const { POSTGRES } = constants.injections;
@@ -43,14 +45,6 @@ export class UsersRepository {
         });
     }
 
-    async removeOneById(id: number) {
-        return await this.repository
-            .createQueryBuilder()
-            .delete()
-            .where("id = :id", { id })
-            .execute();
-    }
-
     async createOne(
         nickname: string,
         email: string,
@@ -79,5 +73,28 @@ export class UsersRepository {
         const { password, ...result } = saved;
 
         return result;
+    }
+
+    async removeOneById(id: number) {
+        return await this.repository
+            .createQueryBuilder()
+            .delete()
+            .where("id = :id", { id })
+            .execute();
+    }
+
+    async updateOneById<T extends UserUpdatedFieldsNames>(
+        id: number,
+        field: T,
+        value: UserEntity[T],
+    ) {
+        return await this.repository
+            .createQueryBuilder()
+            .update()
+            .set({
+                [field]: value,
+            })
+            .where("id = :id", { id })
+            .execute();
     }
 }

@@ -1,4 +1,4 @@
-export default interface UserSecurity {
+export interface UserSecurity {
     TFA_by_email: boolean;
     created_at: Date;
     modified_at: Date;

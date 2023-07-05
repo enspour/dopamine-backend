@@ -20,11 +20,14 @@
             "@pipes": ["src/common/pipes"],
             "@filters": ["src/common/filters"],
 
+            "@loaders/*": ["src/loaders/*"],
+
             "@postgres/*": ["src/databases/postgres/*"],
             "@redis/*": ["src/databases/redis/*"],
 
             "@email-queue/*": ["src/queues/email-queue/*"],
             "@auth-queue/*": ["src/queues/auth-queue/*"],
+            "@users-queue/*": ["src/queues/users-queue/*"],
 
             "@auth-guards/*": ["src/modules/auth/guards/*"],
             "@auth/*": ["src/modules/auth/*"],

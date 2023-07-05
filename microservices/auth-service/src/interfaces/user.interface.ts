@@ -1,8 +1,8 @@
-import UserEmail from "./user-email.interface";
-import UserPassword from "./user-password.interface";
-import UserSecurity from "./user-security.interface";
+import { UserEmail } from "./user-email.interface";
+import { UserPassword } from "./user-password.interface";
+import { UserSecurity } from "./user-security.interface";
 
-export default interface User {
+export interface User {
     id: number;
     nickname: string;
     avatar: string;
@@ -12,3 +12,7 @@ export default interface User {
     created_at: Date;
     modified_at: Date;
 }
+
+export const userUpdatedFieldsNames = ["nickname", "avatar"] as const;
+
+export type UserUpdatedFieldsNames = (typeof userUpdatedFieldsNames)[number];
