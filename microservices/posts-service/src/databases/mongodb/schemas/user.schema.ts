@@ -8,19 +8,19 @@ export class UserEntity {
     @Prop({ type: Number })
     _id: number;
 
-    @Prop({ unique: true })
+    @Prop({ type: String, unique: true })
     name: string;
 
-    @Prop({ required: true })
+    @Prop({ type: String, required: true })
     nickname: string;
 
-    @Prop({ default: "" })
+    @Prop({ type: String, default: "" })
     avatar: string;
 
-    @Prop({ default: Date.now })
+    @Prop({ type: Date, default: Date.now })
     created_at: Date;
 
-    @Prop({ default: Date.now })
+    @Prop({ type: Date, default: Date.now })
     modified_at: Date;
 }
 
