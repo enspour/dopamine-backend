@@ -1,0 +1,15 @@
+upstream auth {
+    server ${AUTH_SERVICE};
+}
+
+upstream users {
+    server ${USERS_SERVICE};
+}
+
+upstream posts {
+    server ${POSTS_SERVICE};
+}
+
+upstream storage {
+    server ${STORAGE_SERVICE};
+}
