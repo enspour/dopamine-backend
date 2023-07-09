@@ -183,9 +183,10 @@ services:
       - MINIO_PORT=9000
       - MINIO_ROOT_USER=dopamine
       - MINIO_ROOT_PASSWORD=secret_password
-      - MINIO_BUCKET=dopamine
       - STORAGE_QUEUE_URLS=kafka-queue:9092
       - STORAGE_QUEUE_NAME=storage_queue
+      - AUTH_QUEUE_URLS=kafka-queue:9092
+      - AUTH_QUEUE_NAME=auth_queue
     depends_on:
       - storage-service-mongodb
     restart: always

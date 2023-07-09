@@ -27,15 +27,15 @@ export class LinksController {
     ) {}
 
     @UseGuards(JwtAccessAuthGuard)
-    @Get(":link")
-    async downloadByLink(@Param("link", ParseObjectIdPipe) link: string) {
-        const result = await this.linksService.getOne(link);
+    @Get(":id")
+    async downloadByLink(@Param("id", ParseObjectIdPipe) id: string) {
+        const link = await this.linksService.getOne(id);
 
-        if (!result) {
+        if (!link) {
             throw new NotFoundException("Link not found");
         }
 
-        const { file } = result;
+        const { file } = link;
 
         const { _id, bucket } = file;
 
