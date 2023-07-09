@@ -39,7 +39,7 @@ export class LinksController {
 
         const { _id, bucket } = file;
 
-        const stream = await this.filesService.downloadFile(`${bucket}`, _id);
+        const stream = await this.filesService.download(`${bucket}`, _id);
         return new StreamableFile(stream);
     }
 
@@ -51,7 +51,7 @@ export class LinksController {
     ) {
         const { user } = req.user as AccessTokenPayload;
 
-        const file = await this.filesService.getFileInfo(id);
+        const file = await this.filesService.getOne(id);
 
         if (!file) {
             throw new NotFoundException("File not found");

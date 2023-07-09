@@ -45,7 +45,7 @@ export class FilesController {
     ) {
         const { user } = req.user as AccessTokenPayload;
 
-        const file = await this.filesService.uploadFile(files[0], user.id);
+        const file = await this.filesService.upload(files[0], user.id);
 
         return {
             statusCode: 200,
@@ -63,7 +63,7 @@ export class FilesController {
     ) {
         const { user } = req.user as AccessTokenPayload;
 
-        const file = await this.filesService.getFileInfo(id);
+        const file = await this.filesService.getOne(id);
 
         if (!file) {
             throw new NotFoundException("file not found");
@@ -76,7 +76,7 @@ export class FilesController {
             file.owner_id === user.id ||
             bucket.users.includes(user.id)
         ) {
-            const stream = await this.filesService.downloadFile(bucket._id, id);
+            const stream = await this.filesService.download(bucket._id, id);
             return new StreamableFile(stream);
         }
 

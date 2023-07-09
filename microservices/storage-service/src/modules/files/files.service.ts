@@ -16,7 +16,7 @@ export class FilesService {
         private minioService: MinioService,
     ) {}
 
-    async uploadFile(file: Express.Multer.File, userId: number) {
+    async upload(file: Express.Multer.File, userId: number) {
         const fileId = new Types.ObjectId().toString();
         const bucket = `users-${userId}`;
 
@@ -32,16 +32,16 @@ export class FilesService {
         );
     }
 
-    async downloadFile(bucket: string, id: string) {
+    async download(bucket: string, id: string) {
         return await this.minioService.downloadFile(bucket, id);
     }
 
-    async removeFile(bucket: string, id: string) {
+    async removeOne(bucket: string, id: string) {
         await this.minioService.removeFile(bucket, id);
         return await this.filesRepository.removeOneById(id);
     }
 
-    async getFileInfo(id: string) {
+    async getOne(id: string) {
         return await this.filesRepository.findOneById(id);
     }
 
