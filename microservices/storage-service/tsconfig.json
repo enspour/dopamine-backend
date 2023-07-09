@@ -29,7 +29,7 @@
             "@auth-strategies/*": ["src/modules/auth/strategies/*"],
             "@auth/*": ["src/modules/auth/*"],
             "@files/*": ["src/modules/files/*"],
-            "@groups/*": ["src/modules/groups/*"],
+            "@buckets/*": ["src/modules/buckets/*"],
             "@links/*": ["src/modules/links/*"]
         },
         "incremental": true,
