@@ -6,11 +6,11 @@ import { LinksRepository } from "@mongodb/repositories/links.repository";
 export class LinksService {
     constructor(private linksRepository: LinksRepository) {}
 
-    async createLink(fileId: string) {
-        return await this.linksRepository.createOne(fileId);
+    async getOne(id: string) {
+        return await this.linksRepository.findOneById(id);
     }
 
-    async getLink(link: string) {
-        return await this.linksRepository.findOneById(link);
+    async createOne(fileId: string) {
+        return await this.linksRepository.createOne(fileId);
     }
 }

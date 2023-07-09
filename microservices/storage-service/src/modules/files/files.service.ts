@@ -18,30 +18,30 @@ export class FilesService {
 
     async uploadFile(file: Express.Multer.File, userId: number) {
         const fileId = new Types.ObjectId().toString();
+        const bucket = `users-${userId}`;
 
-        await this.minioService.uploadFile(fileId, file);
+        await this.minioService.uploadFile(bucket, fileId, file);
 
-        const data = {
-            _id: fileId,
-            name: file.originalname,
-            size: file.size,
-            extension: getFileExtension(file.originalname),
-            owner_id: userId,
-        };
-
-        return await this.filesRepository.createOne(data);
+        return await this.filesRepository.createOne(
+            fileId,
+            file.originalname,
+            file.size,
+            getFileExtension(file.originalname),
+            bucket,
+            userId,
+        );
     }
 
-    async downloadFile(id: string) {
-        return await this.minioService.downloadFile(id);
+    async downloadFile(bucket: string, id: string) {
+        return await this.minioService.downloadFile(bucket, id);
     }
 
-    async removeFile(id: string) {
-        await this.minioService.removeFile(id);
+    async removeFile(bucket: string, id: string) {
+        await this.minioService.removeFile(bucket, id);
         return await this.filesRepository.removeOneById(id);
     }
 
-    async getFile(id: string) {
+    async getFileInfo(id: string) {
         return await this.filesRepository.findOneById(id);
     }
 
