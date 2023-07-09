@@ -3,25 +3,36 @@ import * as minio from "minio";
 
 import constants from "@constants";
 
-import configs from "@configs";
-
 const { MINIO } = constants.injections;
-
-const { bucket } = configs.minio;
 
 @Injectable()
 export class MinioService {
     constructor(@Inject(MINIO) private client: minio.Client) {}
 
-    async uploadFile(fileId: string, file: Express.Multer.File) {
+    async uploadFile(
+        bucket: string,
+        fileId: string,
+        file: Express.Multer.File,
+    ) {
         await this.client.putObject(bucket, fileId, file.buffer, file.size);
     }
 
-    async downloadFile(fileId: string) {
+    async downloadFile(bucket: string, fileId: string) {
         return await this.client.getObject(bucket, fileId);
     }
 
-    async removeFile(fileId: string) {
+    async removeFile(bucket: string, fileId: string) {
         await this.client.removeObject(bucket, fileId);
+    }
+
+    async createBucket(bucket: string) {
+        const isExists = await this.client.bucketExists(bucket);
+
+        if (!isExists) {
+            await this.client.makeBucket(bucket);
+            return true;
+        }
+
+        return false;
     }
 }

@@ -1,6 +1,8 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { HydratedDocument, Types } from "mongoose";
 
+import { BucketEntity } from "./bucket.schema";
+
 import {
     FileAccess,
     FileExtension,
@@ -27,8 +29,11 @@ export class FileEntity {
     @Prop({ type: String, required: true, enum: fileExtensions })
     extension: FileExtension;
 
-    @Prop({ type: String, enum: fileAccesses, default: "denied" })
+    @Prop({ type: String, enum: fileAccesses, default: "private" })
     access: FileAccess;
+
+    @Prop({ type: String, ref: BucketEntity.name, required: true })
+    bucket: BucketEntity;
 
     @Prop({ type: Date, default: Date.now })
     created_at: Date;

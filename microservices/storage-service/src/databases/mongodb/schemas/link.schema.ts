@@ -7,9 +7,6 @@ export type LinkDocument = HydratedDocument<LinkEntity>;
 
 @Schema()
 export class LinkEntity {
-    @Prop({ type: String, unique: true, required: true })
-    link: string;
-
     @Prop({ type: Types.ObjectId, ref: FileEntity.name, required: true })
     file: FileEntity;
 

@@ -4,6 +4,8 @@ import { Model } from "mongoose";
 
 import { FileEntity } from "@mongodb/schemas/file.schema";
 
+import { FileExtension } from "@interfaces";
+
 @Injectable()
 export class FilesRepository {
     constructor(
@@ -11,9 +13,21 @@ export class FilesRepository {
     ) {}
 
     async createOne(
-        file: Omit<FileEntity, "access" | "created_at" | "modified_at">,
+        id: string,
+        name: string,
+        size: number,
+        extension: FileExtension,
+        bucket_id: string,
+        owner_id: number,
     ): Promise<FileEntity> {
-        const doc = new this.fileModel(file);
+        const doc = new this.fileModel({
+            _id: id,
+            name,
+            size,
+            extension,
+            bucket: bucket_id,
+            owner_id,
+        });
         return await doc.save();
     }
 
@@ -40,6 +54,6 @@ export class FilesRepository {
     }
 
     async findOneById(id: string): Promise<FileEntity> {
-        return await this.fileModel.findById(id).exec();
+        return await this.fileModel.findById(id).populate("bucket").exec();
     }
 }

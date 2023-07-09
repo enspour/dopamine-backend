@@ -1,12 +1,12 @@
 import { Module } from "@nestjs/common";
 import { MongooseModule } from "@nestjs/mongoose";
 
+import { BucketEntity, BucketSchema } from "./schemas/bucket.schema";
 import { FileEntity, FileSchema } from "./schemas/file.schema";
-import { GroupEntity, GroupSchema } from "./schemas/group.schema";
 import { LinkEntity, LinkSchema } from "./schemas/link.schema";
 
+import { BucketsRepository } from "./repositories/buckets.repository";
 import { FilesRepository } from "./repositories/files.repository";
-import { GroupsRepository } from "./repositories/groups.repository";
 import { LinksRepository } from "./repositories/links.repository";
 
 import configs from "@configs";
@@ -24,8 +24,8 @@ const { host, port, pass, user, db } = configs.mongodb;
                 schema: FileSchema,
             },
             {
-                name: GroupEntity.name,
-                schema: GroupSchema,
+                name: BucketEntity.name,
+                schema: BucketSchema,
             },
             {
                 name: LinkEntity.name,
@@ -33,7 +33,7 @@ const { host, port, pass, user, db } = configs.mongodb;
             },
         ]),
     ],
-    providers: [FilesRepository, GroupsRepository, LinksRepository],
-    exports: [FilesRepository, GroupsRepository, LinksRepository],
+    providers: [FilesRepository, BucketsRepository, LinksRepository],
+    exports: [FilesRepository, BucketsRepository, LinksRepository],
 })
 export class MongodbModule {}
