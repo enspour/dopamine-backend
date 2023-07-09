@@ -3,7 +3,8 @@ import * as cookieParser from "cookie-parser";
 
 import { AppModule } from "./app.module";
 
-import { connectStorageQueue } from "@loaders/connectStorageQueue";
+import { connectAuthQueue } from "@loaders/connect-auth-queue";
+import { connectStorageQueue } from "@loaders/connect-storage-queue";
 
 import { ValidationPipe } from "@pipes";
 
@@ -20,6 +21,7 @@ async function bootstrap() {
 
     app.useGlobalPipes(new ValidationPipe());
 
+    connectAuthQueue(app);
     connectStorageQueue(app);
 
     await app.startAllMicroservices();
