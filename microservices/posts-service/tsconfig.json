@@ -23,6 +23,7 @@
 
             "@auth-queue/*": ["src/queues/auth-queue/*"],
             "@users-queue/*": ["src/queues/users-queue/*"],
+            "@storage-queue/*": ["src/queues/storage-queue/*"],
 
             "@auth-guards/*": ["src/modules/auth/guards/*"],
             "@auth-strategies/*": ["src/modules/auth/strategies/*"],

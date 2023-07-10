@@ -1,13 +1,25 @@
 import { Injectable } from "@nestjs/common";
 
 import { PostsRepository } from "@mongodb/repositories/posts.repository";
+import { StorageQueueService } from "@storage-queue/storage-queue.service";
 
 @Injectable()
 export class PostsService {
-    constructor(private postsRepository: PostsRepository) {}
+    constructor(
+        private postsRepository: PostsRepository,
+        private storageQueueService: StorageQueueService,
+    ) {}
 
     async create(text: string, images: string[], userId: number) {
-        return await this.postsRepository.createOne(text, images, userId);
+        const post = await this.postsRepository.createOne(text, images, userId);
+
+        const promises = images.map((image) =>
+            this.storageQueueService.makeFilePublic(image, userId),
+        );
+
+        await Promise.allSettled(promises);
+
+        return post;
     }
 
     async remove(id: string) {
