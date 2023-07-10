@@ -146,6 +146,8 @@ services:
       - AUTH_QUEUE_NAME=auth_queue
       - USERS_QUEUE_URLS=kafka-queue:9092
       - USERS_QUEUE_NAME=users_queue
+      - STORAGE_QUEUE_URLS=kafka-queue:9092
+      - STORAGE_QUEUE_NAME=storage_queue
     depends_on:
       - posts-service-mongodb
       - kafka-queue
