@@ -1,9 +1,10 @@
-import emailQueue from "./email-queue.config";
 import mailer from "./mailer.config";
 import server from "./server.config";
 
+import emailQueue from "./email-queue.config";
+
 export default {
-    emailQueue,
     mailer,
     server,
+    emailQueue,
 };
