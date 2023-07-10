@@ -10,11 +10,17 @@ export class MinioService {
     constructor(@Inject(MINIO) private client: minio.Client) {}
 
     async uploadFile(
-        bucket: string,
+        bucketName: string,
         fileId: string,
-        file: Express.Multer.File,
+        fileBuffer: Buffer,
+        fileSize: number,
     ) {
-        await this.client.putObject(bucket, fileId, file.buffer, file.size);
+        return await this.client.putObject(
+            bucketName,
+            fileId,
+            fileBuffer,
+            fileSize,
+        );
     }
 
     async downloadFile(bucket: string, fileId: string) {
