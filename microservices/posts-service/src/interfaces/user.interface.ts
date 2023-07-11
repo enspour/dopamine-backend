@@ -3,6 +3,8 @@ export interface User {
     nickname: string;
     name: string;
     avatar: string;
+    createdAt: Date;
+    modifiedAt: Date;
 }
 
 export const userUpdatedFieldsNames = ["name", "nickname", "avatar"] as const;
