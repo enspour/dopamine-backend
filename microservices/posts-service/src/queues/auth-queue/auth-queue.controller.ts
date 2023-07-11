@@ -1,16 +1,16 @@
 import { Controller } from "@nestjs/common";
 import { EventPattern, Payload } from "@nestjs/microservices";
 
-import { AuthQueueService } from "./auth-queue.service";
+import { UsersService } from "@users/users.service";
 
 import { CreateUserDto } from "./dto/create-user.dto";
 
 @Controller()
 export class AuthQueueController {
-    constructor(private authQueueService: AuthQueueService) {}
+    constructor(private usersService: UsersService) {}
 
     @EventPattern("auth.create.user")
     async handleCreateUser(@Payload() user: CreateUserDto) {
-        await this.authQueueService.createUser(user);
+        await this.usersService.create(user.id, user.nickname);
     }
 }
