@@ -29,7 +29,8 @@
             "@auth-strategies/*": ["src/modules/auth/strategies/*"],
             "@auth/*": ["src/modules/auth/*"],
             "@users/*": ["src/modules/users/*"],
-            "@posts/*": ["src/modules/posts/*"]
+            "@posts/*": ["src/modules/posts/*"],
+            "@storage/*": ["src/modules/storage/*"]
         },
         "incremental": true,
         "skipLibCheck": true,

@@ -13,6 +13,7 @@ import {
     UseGuards,
 } from "@nestjs/common";
 import { Request } from "express";
+import { Types } from "mongoose";
 
 import { PostsService } from "./posts.service";
 
@@ -48,7 +49,7 @@ export class PostsController {
 
     @UseGuards(JwtAccessAuthGuard)
     @Get(":id")
-    async getOne(@Param("id", ParseObjectIdPipe) id: string) {
+    async getOne(@Param("id", ParseObjectIdPipe) id: Types.ObjectId) {
         const post = await this.postsService.findOne(id);
 
         if (!post) {
@@ -66,7 +67,7 @@ export class PostsController {
     @UseGuards(JwtAccessAuthGuard)
     @Delete(":id")
     async remove(
-        @Param("id", ParseObjectIdPipe) id: string,
+        @Param("id", ParseObjectIdPipe) id: Types.ObjectId,
         @Req() req: Request,
     ) {
         const { user } = req.user as AccessTokenPayload;
@@ -77,7 +78,7 @@ export class PostsController {
             throw new NotFoundException("Post is not found");
         }
 
-        if (post.owner._id !== user.id) {
+        if (post.owner.id !== user.id) {
             throw new ForbiddenException("Don't access to post");
         }
 
@@ -101,7 +102,7 @@ export class PostsController {
             throw new NotFoundException("Post is not found");
         }
 
-        if (post.owner._id !== user.id) {
+        if (post.owner.id !== user.id) {
             throw new ForbiddenException("Don't access to post");
         }
 
@@ -125,11 +126,11 @@ export class PostsController {
             throw new NotFoundException("Post is not found");
         }
 
-        if (post.owner._id !== user.id) {
+        if (post.owner.id !== user.id) {
             throw new ForbiddenException("Don't access to post");
         }
 
-        await this.postsService.updateImages(id, images);
+        await this.postsService.updateImages(id, images, user.id);
 
         return {
             statusCode: 200,
@@ -140,7 +141,7 @@ export class PostsController {
     @Post("like/:id")
     @HttpCode(200)
     async like(
-        @Param("id", ParseObjectIdPipe) id: string,
+        @Param("id", ParseObjectIdPipe) id: Types.ObjectId,
         @Req() req: Request,
     ) {
         const { user } = req.user as AccessTokenPayload;
@@ -151,7 +152,7 @@ export class PostsController {
             throw new NotFoundException("Post is not found");
         }
 
-        if (post.owner._id === user.id) {
+        if (post.owner.id === user.id) {
             throw new ForbiddenException("You can't like your post");
         }
 
@@ -166,7 +167,7 @@ export class PostsController {
     @Post("unlike/:id")
     @HttpCode(200)
     async unlike(
-        @Param("id", ParseObjectIdPipe) id: string,
+        @Param("id", ParseObjectIdPipe) id: Types.ObjectId,
         @Req() req: Request,
     ) {
         const { user } = req.user as AccessTokenPayload;
@@ -175,6 +176,10 @@ export class PostsController {
 
         if (!post) {
             throw new NotFoundException("Post is not found");
+        }
+
+        if (post.owner.id === user.id) {
+            throw new ForbiddenException("You can't unlike your post");
         }
 
         await this.postsService.unlike(id, user.id);

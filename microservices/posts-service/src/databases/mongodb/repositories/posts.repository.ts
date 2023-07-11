@@ -1,8 +1,10 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import { Model } from "mongoose";
+import { Model, Types } from "mongoose";
 
 import { PostEntity, PostEntityFKNames } from "@mongodb/schemas/post.schema";
+
+import { Post } from "@interfaces";
 
 @Injectable()
 export class PostsRepository {
@@ -14,22 +16,24 @@ export class PostsRepository {
         text: string,
         images: string[],
         ownerId: number,
-    ): Promise<PostEntity> {
-        const post = new this.postModel({
+    ): Promise<Post> {
+        const doc = new this.postModel({
             text,
             images,
             owner: ownerId,
         });
 
-        return await post.save();
+        const post = await doc.save();
+
+        return this.transform(post);
     }
 
     async updateOne<T extends keyof PostEntity>(
-        id: string,
+        id: Types.ObjectId,
         field: T,
         value: PostEntity[T],
     ) {
-        return await this.postModel
+        const result = await this.postModel
             .updateOne(
                 { _id: id },
                 {
@@ -40,16 +44,28 @@ export class PostsRepository {
                 },
             )
             .exec();
+
+        if (result.modifiedCount) {
+            return true;
+        }
+
+        return false;
     }
 
-    async removeOneById(id: string) {
-        return await this.postModel.deleteOne({ _id: id }).exec();
+    async removeOneById(id: Types.ObjectId) {
+        const result = await this.postModel.deleteOne({ _id: id }).exec();
+
+        if (result.deletedCount) {
+            return true;
+        }
+
+        return false;
     }
 
     async findOneById<T extends PostEntityFKNames = never>(
-        id: string,
+        id: Types.ObjectId,
         relations: Record<T, boolean> = <Record<T, boolean>>{},
-    ): Promise<Omit<PostEntity, Exclude<PostEntityFKNames, T>> | null> {
+    ): Promise<Omit<Post, Exclude<PostEntityFKNames, T>> | null> {
         const query = this.postModel.findById(id);
 
         for (let relation in relations) {
@@ -58,11 +74,17 @@ export class PostsRepository {
             }
         }
 
-        return await query.exec();
+        const post = await query.exec();
+
+        if (post) {
+            return this.transform(post);
+        }
+
+        return null;
     }
 
-    async like(id: string, userId: number) {
-        return await this.postModel
+    async like(id: Types.ObjectId, userId: number) {
+        const result = await this.postModel
             .updateOne(
                 { _id: id },
                 {
@@ -72,10 +94,16 @@ export class PostsRepository {
                 },
             )
             .exec();
+
+        if (result.modifiedCount) {
+            return true;
+        }
+
+        return false;
     }
 
-    async unlike(id: string, userId: number) {
-        return await this.postModel
+    async unlike(id: Types.ObjectId, userId: number) {
+        const result = await this.postModel
             .updateOne(
                 { _id: id },
                 {
@@ -85,5 +113,19 @@ export class PostsRepository {
                 },
             )
             .exec();
+
+        if (result.modifiedCount) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private transform(post: PostEntity): Post {
+        if ("transform" in post && typeof post.transform === "function") {
+            return post.transform();
+        }
+
+        throw new Error("Not found transform method");
     }
 }

@@ -6,7 +6,6 @@ import { UsersService } from "./users.service";
 
 @Module({
     imports: [MongodbModule],
-    controllers: [],
     providers: [UsersService],
     exports: [UsersService],
 })

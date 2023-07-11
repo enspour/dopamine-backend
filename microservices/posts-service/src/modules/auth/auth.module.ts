@@ -5,7 +5,6 @@ import { JwtAccessStrategy } from "./strategies/jwt-access.strategy";
 
 @Module({
     imports: [JwtModule.register({})],
-    controllers: [],
     providers: [JwtAccessStrategy],
 })
 export class AuthModule {}

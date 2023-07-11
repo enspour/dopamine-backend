@@ -2,7 +2,11 @@ import { Injectable } from "@nestjs/common";
 
 import { UsersRepository } from "@mongodb/repositories/users.repository";
 
-import { User, UserUpdatedFieldsNames } from "@interfaces";
+import {
+    User,
+    UserUpdatedFieldsNames,
+    userUpdatedFieldsNames,
+} from "@interfaces";
 
 @Injectable()
 export class UsersService {
@@ -17,6 +21,10 @@ export class UsersService {
         field: K,
         value: User[K],
     ) {
-        return await this.usersRepository.updateOne(id, field, value);
+        if (userUpdatedFieldsNames.includes(field)) {
+            return await this.usersRepository.updateOne(id, field, value);
+        }
+
+        return false;
     }
 }

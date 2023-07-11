@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { HydratedDocument, Types } from "mongoose";
 
-import { UserEntity } from "./user.schema";
+import { UserEntity, transformUser } from "./user.schema";
 
 export type PostDocument = HydratedDocument<PostEntity>;
 
@@ -31,10 +31,32 @@ export class PostEntity implements Record<PostEntityFKNames, any> {
     comments: PostEntity[];
 
     @Prop({ type: Date, default: Date.now })
-    created_at: Date;
+    createdAt: Date;
 
     @Prop({ type: Date, default: Date.now })
-    modified_at: Date;
+    modifiedAt: Date;
 }
 
 export const PostSchema = SchemaFactory.createForClass(PostEntity);
+
+export const transformPost = (obj) => {
+    if (obj && typeof obj === "object" && "_id" in obj) {
+        const post = { ...obj };
+
+        post.id = post._id;
+        delete post._id;
+
+        post.owner = transformUser(post.owner);
+        post.likes = post.likes.map((user) => transformUser(user));
+        post.comments = post.comments.map((comment) => transformPost(comment));
+
+        return post;
+    }
+
+    return obj;
+};
+
+PostSchema.method("transform", function () {
+    const obj = this.toObject();
+    return transformPost(obj);
+});
