@@ -1,4 +1,6 @@
+import { Types } from "mongoose";
+
 export interface UpdateFileAccessDto {
-    fileId: string;
+    fileId: Types.ObjectId;
     userId: number;
 }

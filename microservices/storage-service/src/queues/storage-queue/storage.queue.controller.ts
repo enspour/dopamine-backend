@@ -19,7 +19,7 @@ export class StorageQueueController {
             };
         }
 
-        if (file.owner_id !== userId) {
+        if (file.ownerId !== userId) {
             return {
                 statusCode: 403,
             };
@@ -45,7 +45,7 @@ export class StorageQueueController {
             };
         }
 
-        if (file.owner_id !== userId) {
+        if (file.ownerId !== userId) {
             return {
                 statusCode: 403,
             };

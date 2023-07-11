@@ -13,6 +13,7 @@ import {
 } from "@nestjs/common";
 import { AnyFilesInterceptor } from "@nestjs/platform-express";
 import { Request } from "express";
+import { Types } from "mongoose";
 
 import { FilesService } from "./files.service";
 
@@ -58,7 +59,7 @@ export class FilesController {
     @UseGuards(JwtAccessAuthGuard)
     @Get("download/:id")
     async downloadById(
-        @Param("id", ParseObjectIdPipe) id: string,
+        @Param("id", ParseObjectIdPipe) id: Types.ObjectId,
         @Req() req: Request,
     ) {
         const { user } = req.user as AccessTokenPayload;
@@ -73,10 +74,10 @@ export class FilesController {
 
         if (
             file.access === "public" ||
-            file.owner_id === user.id ||
+            file.ownerId === user.id ||
             bucket.users.includes(user.id)
         ) {
-            const stream = await this.filesService.download(bucket._id, id);
+            const stream = await this.filesService.download(id, bucket.name);
             return new StreamableFile(stream);
         }
 

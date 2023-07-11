@@ -1,8 +1,10 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import { Model } from "mongoose";
+import { Model, Types } from "mongoose";
 
 import { LinkEntity } from "@mongodb/schemas/link.schema";
+
+import { Link } from "@interfaces";
 
 @Injectable()
 export class LinksRepository {
@@ -10,19 +12,49 @@ export class LinksRepository {
         @InjectModel(LinkEntity.name) private linkModel: Model<LinkEntity>,
     ) {}
 
-    async createOne(fileId: string): Promise<LinkEntity> {
+    async createOne(fileId: Types.ObjectId): Promise<Link> {
         const doc = new this.linkModel({
             file: fileId,
         });
 
-        return await doc.save();
+        const link = await doc.save();
+
+        return this.transform(link);
     }
 
-    async removeOneById(id: string) {
-        return await this.linkModel.deleteOne({ _id: id }).exec();
+    async removeOneById(id: Types.ObjectId) {
+        const result = await this.linkModel.deleteOne({ _id: id }).exec();
+
+        if (result.deletedCount) {
+            return true;
+        }
+
+        return false;
     }
 
-    async findOneById(id: string): Promise<LinkEntity> {
-        return await this.linkModel.findById(id).populate("file").exec();
+    async findOneById(id: Types.ObjectId): Promise<Link | null> {
+        const link = await this.linkModel
+            .findOne({ _id: id })
+            .populate({
+                path: "file",
+                populate: {
+                    path: "bucket",
+                },
+            })
+            .exec();
+
+        if (link) {
+            return this.transform(link);
+        }
+
+        return null;
+    }
+
+    private transform(link: LinkEntity): Link {
+        if ("transform" in link && typeof link.transform === "function") {
+            return link.transform();
+        }
+
+        throw new Error("Not found transform method");
     }
 }

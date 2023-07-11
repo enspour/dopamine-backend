@@ -4,6 +4,8 @@ import { Model } from "mongoose";
 
 import { BucketEntity } from "@mongodb/schemas/bucket.schema";
 
+import { Bucket } from "@interfaces";
+
 @Injectable()
 export class BucketsRepository {
     constructor(
@@ -11,20 +13,42 @@ export class BucketsRepository {
         private bucketModel: Model<BucketEntity>,
     ) {}
 
-    async createOne(id: string, users: number[]): Promise<BucketEntity> {
+    async createOne(name: string, users: number[]): Promise<Bucket> {
         const doc = new this.bucketModel({
-            _id: id,
+            _id: name,
             users,
         });
 
-        return await doc.save();
+        const bucket = await doc.save();
+
+        return this.transform(bucket);
     }
 
-    async removeOneById(id: string) {
-        return await this.bucketModel.deleteOne({ _id: id }).exec();
+    async removeOneByName(name: string) {
+        const result = await this.bucketModel.deleteOne({ _id: name }).exec();
+
+        if (result.deletedCount) {
+            return true;
+        }
+
+        return false;
     }
 
-    async findOneById(id: string): Promise<BucketEntity> {
-        return await this.bucketModel.findOne({ _id: id }).exec();
+    async findOneByName(name: string): Promise<Bucket | null> {
+        const bucket = await this.bucketModel.findOne({ _id: name }).exec();
+
+        if (bucket) {
+            return this.transform(bucket);
+        }
+
+        return null;
+    }
+
+    private transform(bucket: BucketEntity): Bucket {
+        if ("transform" in bucket && typeof bucket.transform === "function") {
+            return bucket.transform();
+        }
+
+        throw new Error("Not found transform method");
     }
 }

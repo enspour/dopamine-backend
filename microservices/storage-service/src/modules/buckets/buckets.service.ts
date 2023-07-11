@@ -3,7 +3,8 @@ import { Injectable } from "@nestjs/common";
 import { MinioService } from "@minio/minio.service";
 
 import { BucketsRepository } from "@mongodb/repositories/buckets.repository";
-import { BucketEntity } from "@mongodb/schemas/bucket.schema";
+
+import { Bucket } from "@interfaces";
 
 @Injectable()
 export class BucketsService {
@@ -12,17 +13,17 @@ export class BucketsService {
         private minioService: MinioService,
     ) {}
 
-    async getOne(id: string) {
-        return await this.bucketsRepository.findOneById(id);
+    async getOne(name: string) {
+        return await this.bucketsRepository.findOneByName(name);
     }
 
-    async createOne(id: string, users: number[]): Promise<BucketEntity | null> {
-        const result = this.minioService.createBucket(id);
+    async createOne(name: string, users: number[]): Promise<Bucket | null> {
+        const result = this.minioService.createBucket(name);
 
         if (!result) {
             return null;
         }
 
-        return await this.bucketsRepository.createOne(id, users);
+        return await this.bucketsRepository.createOne(name, users);
     }
 }

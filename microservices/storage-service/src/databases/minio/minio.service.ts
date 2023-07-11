@@ -10,13 +10,13 @@ export class MinioService {
     constructor(@Inject(MINIO) private client: minio.Client) {}
 
     async uploadFile(
-        bucketName: string,
+        bucket: string,
         fileId: string,
         fileBuffer: Buffer,
         fileSize: number,
     ) {
         return await this.client.putObject(
-            bucketName,
+            bucket,
             fileId,
             fileBuffer,
             fileSize,

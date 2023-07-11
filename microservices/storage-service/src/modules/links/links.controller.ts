@@ -10,6 +10,7 @@ import {
     UseGuards,
 } from "@nestjs/common";
 import { Request } from "express";
+import { Types } from "mongoose";
 
 import { FilesService } from "@files/files.service";
 import { LinksService } from "./links.service";
@@ -28,7 +29,7 @@ export class LinksController {
 
     @UseGuards(JwtAccessAuthGuard)
     @Get(":id")
-    async downloadByLink(@Param("id", ParseObjectIdPipe) id: string) {
+    async downloadByLink(@Param("id", ParseObjectIdPipe) id: Types.ObjectId) {
         const link = await this.linksService.getOne(id);
 
         if (!link) {
@@ -37,16 +38,18 @@ export class LinksController {
 
         const { file } = link;
 
-        const { _id, bucket } = file;
+        const stream = await this.filesService.download(
+            file.id,
+            file.bucket.name,
+        );
 
-        const stream = await this.filesService.download(`${bucket}`, _id);
         return new StreamableFile(stream);
     }
 
     @UseGuards(JwtAccessAuthGuard)
     @Post(":id")
     async createLink(
-        @Param("id", ParseObjectIdPipe) id: string,
+        @Param("id", ParseObjectIdPipe) id: Types.ObjectId,
         @Req() req: Request,
     ) {
         const { user } = req.user as AccessTokenPayload;
@@ -57,11 +60,11 @@ export class LinksController {
             throw new NotFoundException("File not found");
         }
 
-        if (file.owner_id !== user.id) {
+        if (file.ownerId !== user.id) {
             throw new ForbiddenException("File not available");
         }
 
-        const link = await this.linksService.createOne(file._id);
+        const link = await this.linksService.createOne(file.id);
 
         return {
             statusCode: 201,

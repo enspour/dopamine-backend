@@ -13,3 +13,21 @@ export class BucketEntity {
 }
 
 export const BucketSchema = SchemaFactory.createForClass(BucketEntity);
+
+export const transformBucket = (obj: any) => {
+    if (obj && typeof obj === "object" && "_id" in obj) {
+        const bucket = { ...obj };
+
+        bucket.name = bucket._id;
+        delete bucket._id;
+
+        return bucket;
+    }
+
+    return obj;
+};
+
+BucketSchema.method("transform", function () {
+    const obj = this.toObject();
+    return transformBucket(obj);
+});
