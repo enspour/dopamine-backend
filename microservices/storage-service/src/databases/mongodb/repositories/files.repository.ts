@@ -45,7 +45,7 @@ export class FilesRepository {
                 {
                     $set: {
                         [field]: value,
-                        modified_at: Date.now(),
+                        modifiedAt: Date.now(),
                     },
                 },
             )

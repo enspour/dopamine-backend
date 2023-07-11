@@ -27,11 +27,9 @@ export class FollowingsController {
     ) {}
 
     @UseGuards(JwtAccessAuthGuard)
-    @Get()
-    async getAll(@Req() req: Request) {
-        const { user } = req.user as AccessTokenPayload;
-
-        const followings = await this.followingsService.findAll(user.id);
+    @Get(":id")
+    async getAll(@Param("id", ParseIntPipe) id: number) {
+        const followings = await this.followingsService.findAll(id);
 
         return {
             statusCode: 200,
