@@ -4,17 +4,17 @@ import {
     Injectable,
     PipeTransform,
 } from "@nestjs/common";
-import { isValidObjectId } from "mongoose";
+import { Types, isValidObjectId } from "mongoose";
 
 @Injectable()
-export class ParseObjectIdPipe implements PipeTransform {
+export class ParseObjectIdPipe implements PipeTransform<any, Types.ObjectId> {
     constructor() {}
 
-    transform(value: any, metadata: ArgumentMetadata) {
+    transform(value: any, metadata: ArgumentMetadata): Types.ObjectId {
         if (!isValidObjectId(value)) {
             throw new BadRequestException("Validation failed");
         }
 
-        return value;
+        return new Types.ObjectId(value);
     }
 }
