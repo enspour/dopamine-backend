@@ -1,20 +1,17 @@
-import {
-    ArgumentMetadata,
-    BadRequestException,
-    Injectable,
-    PipeTransform,
-} from "@nestjs/common";
-import { isValidObjectId } from "mongoose";
+import { BadRequestException, Injectable, PipeTransform } from "@nestjs/common";
+import { Types, isValidObjectId } from "mongoose";
 
 @Injectable()
-export default class ParseObjectIdPipe implements PipeTransform {
+export default class ParseObjectIdPipe
+    implements PipeTransform<any, Types.ObjectId>
+{
     constructor() {}
 
-    transform(value: any, metadata: ArgumentMetadata) {
+    transform(value: any): Types.ObjectId {
         if (!isValidObjectId(value)) {
             throw new BadRequestException("Validation failed");
         }
 
-        return value;
+        return new Types.ObjectId(value);
     }
 }
