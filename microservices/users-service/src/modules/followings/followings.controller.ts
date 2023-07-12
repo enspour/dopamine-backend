@@ -55,16 +55,10 @@ export class FollowingsController {
             throw new NotFoundException("User not found");
         }
 
-        const following = await this.followingsService.follow(
-            user.id,
-            follower.id,
-        );
+        await this.followingsService.follow(user.id, follower.id);
 
         return {
             statusCode: 200,
-            data: {
-                following,
-            },
         };
     }
 
@@ -84,16 +78,10 @@ export class FollowingsController {
             throw new NotFoundException("User not found");
         }
 
-        const count = await this.followingsService.unfollow(
-            user.id,
-            follower.id,
-        );
+        await this.followingsService.unfollow(user.id, follower.id);
 
         return {
             statusCode: 200,
-            data: {
-                count,
-            },
         };
     }
 }
