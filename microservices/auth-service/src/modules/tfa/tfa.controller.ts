@@ -19,7 +19,7 @@ import { ParseCodePipe } from "@pipes";
 
 import { User } from "@interfaces";
 
-@Controller("TFA")
+@Controller("auth/TFA")
 export class TFAController {
     constructor(
         private tfaService: TFAService,
@@ -43,7 +43,7 @@ export class TFAController {
         }
 
         const sessionInfo = {
-            user_agent: req.headers["user-agent"],
+            userAgent: req.headers["user-agent"],
         };
 
         await this.sessionsService.login(user, sessionInfo, res);
