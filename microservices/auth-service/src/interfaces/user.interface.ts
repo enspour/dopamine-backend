@@ -9,8 +9,8 @@ export interface User {
     security: UserSecurity;
     emails: UserEmail[];
     password: UserPassword;
-    created_at: Date;
-    modified_at: Date;
+    createdAt: Date;
+    modifiedAt: Date;
 }
 
 export const userUpdatedFieldsNames = ["nickname", "avatar"] as const;

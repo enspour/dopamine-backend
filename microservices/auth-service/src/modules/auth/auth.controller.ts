@@ -87,7 +87,7 @@ export class AuthController {
         }
 
         const data = {
-            user_agent: req.headers["user-agent"],
+            userAgent: req.headers["user-agent"],
         };
 
         await this.sessionsService.login(user, data, res);
@@ -123,11 +123,11 @@ export class AuthController {
 
         const user = req.user as Omit<User, "password">;
 
-        if (user.security.TFA_by_email) {
+        if (user.security.TFAByEmail) {
             await this.tfaService.sendConfirmationEmail(user.id, user.emails);
         } else {
             const data = {
-                user_agent: req.headers["user-agent"],
+                userAgent: req.headers["user-agent"],
             };
 
             await this.sessionsService.login(user, data, res);

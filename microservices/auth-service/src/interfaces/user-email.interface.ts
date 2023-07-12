@@ -2,6 +2,6 @@ export interface UserEmail {
     id: number;
     email: string;
     confirm: boolean;
-    created_at: Date;
-    modified_at: Date;
+    createdAt: Date;
+    modifiedAt: Date;
 }

@@ -21,10 +21,10 @@ export class UserEmailEntity {
     confirm: boolean;
 
     @CreateDateColumn()
-    created_at: Date;
+    createdAt: Date;
 
     @UpdateDateColumn()
-    modified_at: Date;
+    modifiedAt: Date;
 
     @ManyToOne(() => UserEntity, (user) => user.emails, { onDelete: "CASCADE" })
     user: UserEntity;

@@ -18,43 +18,43 @@ export class FollowingsRepository {
     }
 
     async findAllFollowers<T extends FollowingEntityFKNames = never>(
-        user_id: number,
+        userId: number,
         relations: Record<T, boolean> = <Record<T, boolean>>{},
     ): Promise<Omit<FollowingEntity, Exclude<FollowingEntityFKNames, T>>[]> {
         return await this.repository.find({
             where: {
-                user_id,
+                userId,
             },
             relations,
         });
     }
 
     async findAllFollowings<T extends FollowingEntityFKNames = never>(
-        user_id: number,
+        userId: number,
         relations: Record<T, boolean> = <Record<T, boolean>>{},
     ): Promise<Omit<FollowingEntity, Exclude<FollowingEntityFKNames, T>>[]> {
         return await this.repository.find({
             where: {
-                follower_id: user_id,
+                followerId: userId,
             },
             relations,
         });
     }
 
-    async createOne(user_id: number, follower_id: number) {
+    async createOne(userId: number, followerId: number) {
         const following = new FollowingEntity();
-        following.user_id = user_id;
-        following.follower_id = follower_id;
+        following.userId = userId;
+        following.followerId = followerId;
 
         return await this.repository.save(following);
     }
 
-    async removeOne(user_id: number, follower_id: number) {
+    async removeOne(userId: number, followerId: number) {
         const { affected } = await this.repository
             .createQueryBuilder()
             .delete()
-            .where("user_id = :user_id", { user_id })
-            .where("follower_id = :follower_id", { follower_id })
+            .where("userId = :userId", { userId })
+            .where("followerId = :followerId", { followerId })
             .execute();
 
         return affected;

@@ -25,12 +25,6 @@ export class UserEntity {
     @Column("text")
     avatar: string;
 
-    @CreateDateColumn()
-    created_at: Date;
-
-    @UpdateDateColumn()
-    modified_at: Date;
-
     @OneToOne(() => UserSecurityEntity, (security) => security.user, {
         cascade: true,
     })
@@ -45,4 +39,10 @@ export class UserEntity {
         cascade: true,
     })
     emails: UserEmailEntity[];
+
+    @CreateDateColumn()
+    createdAt: Date;
+
+    @UpdateDateColumn()
+    modifiedAt: Date;
 }

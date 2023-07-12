@@ -20,7 +20,7 @@ export class UsersSecurityRepository {
             .createQueryBuilder()
             .update()
             .set({
-                TFA_by_email: value,
+                TFAByEmail: value,
             })
             .where("user.id = :userId", { userId })
             .execute();

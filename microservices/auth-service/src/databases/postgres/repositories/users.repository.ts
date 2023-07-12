@@ -48,13 +48,13 @@ export class UsersRepository {
     async createOne(
         nickname: string,
         email: string,
-        hashed_password: string,
+        hashedPassword: string,
     ): Promise<Omit<UserEntity, "password">> {
         const userSecurity = new UserSecurityEntity();
-        userSecurity.TFA_by_email = false;
+        userSecurity.TFAByEmail = false;
 
         const userPassword = new UserPasswordEntity();
-        userPassword.hashed_password = hashed_password;
+        userPassword.hashedPassword = hashedPassword;
 
         const userEmail = new UserEmailEntity();
         userEmail.email = email;

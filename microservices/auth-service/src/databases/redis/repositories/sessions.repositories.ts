@@ -7,9 +7,9 @@ const { REDIS } = constants.injections;
 
 export interface Session {
     id: string;
-    user_agent: string;
-    expired_at: number;
-    created_at: number;
+    userAgent: string;
+    expiredAt: number;
+    createdAt: number;
 }
 
 @Injectable()

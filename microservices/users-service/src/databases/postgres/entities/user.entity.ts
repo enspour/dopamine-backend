@@ -28,15 +28,15 @@ export class UserEntity {
     @Column("text")
     status: string;
 
-    @CreateDateColumn()
-    created_at: Date;
-
-    @UpdateDateColumn()
-    modified_at: Date;
-
     @OneToMany(() => FollowingEntity, (following) => following.follower)
     followers: FollowingEntity[];
 
     @OneToMany(() => FollowingEntity, (following) => following.user)
     followings: FollowingEntity[];
+
+    @CreateDateColumn()
+    createdAt: Date;
+
+    @UpdateDateColumn()
+    modifiedAt: Date;
 }

@@ -1,5 +1,5 @@
 export interface UserSecurity {
-    TFA_by_email: boolean;
-    created_at: Date;
-    modified_at: Date;
+    TFAByEmail: boolean;
+    createdAt: Date;
+    modifiedAt: Date;
 }

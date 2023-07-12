@@ -14,26 +14,26 @@ export type FollowingEntityFKNames = "follower" | "user";
 @Entity({ name: "followings" })
 export class FollowingEntity {
     @PrimaryColumn()
-    user_id: number;
+    userId: number;
 
     @PrimaryColumn()
-    follower_id: number;
+    followerId: number;
 
     @ManyToOne(() => UserEntity, (user) => user.followings, {
         onDelete: "CASCADE",
     })
-    @JoinColumn({ name: "user_id" })
+    @JoinColumn({ name: "userId" })
     user: UserEntity;
 
     @ManyToOne(() => UserEntity, (user) => user.followers, {
         onDelete: "CASCADE",
     })
-    @JoinColumn({ name: "follower_id" })
+    @JoinColumn({ name: "followerId" })
     follower: UserEntity;
 
     @CreateDateColumn()
-    created_at: Date;
+    createdAt: Date;
 
     @UpdateDateColumn()
-    modified_at: Date;
+    modifiedAt: Date;
 }

@@ -65,7 +65,7 @@ export class SessionsController {
         const user = await this.usersService.findOneById(userId);
 
         const data = {
-            user_agent: req.headers["user-agent"],
+            userAgent: req.headers["user-agent"],
         };
 
         await this.sessionsService.login(user, data, res);

@@ -16,13 +16,13 @@ export class UserSecurityEntity {
     id: number;
 
     @Column("boolean")
-    TFA_by_email: boolean;
+    TFAByEmail: boolean;
 
     @CreateDateColumn()
-    created_at: Date;
+    createdAt: Date;
 
     @UpdateDateColumn()
-    modified_at: Date;
+    modifiedAt: Date;
 
     @OneToOne(() => UserEntity, (user) => user.security, {
         onDelete: "CASCADE",

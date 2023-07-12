@@ -45,7 +45,7 @@ export class LocalNotVerifiedStrategy extends PassportStrategy(
         }
 
         const isValid = await this.authService.validatePassword(
-            user.password.hashed_password,
+            user.password.hashedPassword,
             password,
         );
 

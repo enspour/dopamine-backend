@@ -16,13 +16,13 @@ export class UserPasswordEntity {
     id: number;
 
     @Column("text")
-    hashed_password: string;
+    hashedPassword: string;
 
     @CreateDateColumn()
-    created_at: Date;
+    createdAt: Date;
 
     @UpdateDateColumn()
-    modified_at: Date;
+    modifiedAt: Date;
 
     @OneToOne(() => UserEntity, (user) => user.password, {
         onDelete: "CASCADE",

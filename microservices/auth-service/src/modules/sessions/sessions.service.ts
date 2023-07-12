@@ -39,7 +39,7 @@ export class SessionsService {
 
     async login(
         user: Pick<User, "id" | "nickname" | "avatar">,
-        data: Omit<Session, "id" | "expired_at" | "created_at">,
+        data: Omit<Session, "id" | "expiredAt" | "createdAt">,
         res: Response,
     ) {
         const tokens = await this.jwtService.issue(user);
@@ -49,8 +49,8 @@ export class SessionsService {
         const session = {
             ...data,
             id: payload.sessionId,
-            expired_at: payload.exp,
-            created_at: payload.iat,
+            expiredAt: payload.exp,
+            createdAt: payload.iat,
         };
 
         await this.sessionsRepository.save(payload.userId, session);
