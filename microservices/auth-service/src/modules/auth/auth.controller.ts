@@ -65,7 +65,7 @@ export class AuthController {
     }
 
     @UseGuards(LocalNotVerifiedAuthGuard)
-    @Post("signup/email/confirm")
+    @Post("signup/email-confirmation")
     @HttpCode(200)
     async signupConfirmEmail(
         @Req() req: Request,
@@ -98,7 +98,7 @@ export class AuthController {
     }
 
     @UseGuards(LocalNotVerifiedAuthGuard)
-    @Post("signup/email/resend")
+    @Post("signup/resend-email-confirmation")
     @HttpCode(200)
     async signupResendEmail(@Req() req: Request) {
         const user = req.user as Omit<User, "password">;

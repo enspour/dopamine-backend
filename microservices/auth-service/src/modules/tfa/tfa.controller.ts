@@ -27,7 +27,7 @@ export class TFAController {
     ) {}
 
     @UseGuards(LocalAuthGuard)
-    @Post("email/confirm")
+    @Post("confirm-by-email")
     @HttpCode(200)
     async confirmByEmail(
         @Req() req: Request,
@@ -54,7 +54,7 @@ export class TFAController {
     }
 
     @UseGuards(LocalAuthGuard)
-    @Post("email/resend")
+    @Post("resend-email")
     @HttpCode(200)
     async resendEmail(@Req() req: Request) {
         const user = req.user as Omit<User, "password">;
