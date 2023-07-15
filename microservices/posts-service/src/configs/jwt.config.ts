@@ -6,6 +6,6 @@ export default {
             process.env.JWT_ACCESS_TOKEN_PUBLIC_KEY ||
             readFileSync(
                 __dirname + "/../../keys/access-token/jwtRS256.key.pub",
-            ),
+            ).toString(),
     },
 };
