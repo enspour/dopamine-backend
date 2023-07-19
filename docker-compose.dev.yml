@@ -49,10 +49,14 @@ services:
     volumes:
       - ./microservices/auth-service:/usr/src/app
     depends_on:
-      - auth-service-postgres
-      - auth-service-redis
-      - rabbitmq-queue
-      - kafka-queue
+      auth-service-postgres:
+        condition: service_healthy
+      auth-service-redis:
+        condition: service_healthy
+      rabbitmq-queue:
+        condition: service_healthy
+      kafka-queue:
+        condition: service_healthy
     restart: always
 
   auth-service-postgres:
@@ -64,11 +68,21 @@ services:
     volumes:
       - ./microservices/auth-service/databases/postgres/init/:/docker-entrypoint-initdb.d/
       - ./microservices/auth-service/databases/postgres/data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   auth-service-redis:
     image: redis:7.0.11-alpine
     container_name: dopamine-auth-service-redis
     command: redis-server --requirepass secret
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -a secret ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   # EMAIL SERVICE
   email-service:
@@ -84,7 +98,8 @@ services:
     volumes:
       - ./microservices/email-service:/usr/src/app
     depends_on:
-      - rabbitmq-queue
+      rabbitmq-queue:
+        condition: service_healthy
     restart: always
     
   # USERS SERVICE
@@ -110,8 +125,10 @@ services:
       - USERS_QUEUE_URLS=kafka-queue:9092
       - USERS_QUEUE_NAME=users_queue
     depends_on:
-      - users-service-postgres
-      - kafka-queue
+      users-service-postgres:
+        condition: service_healthy
+      kafka-queue:
+        condition: service_healthy
     restart: always
 
   users-service-postgres:
@@ -123,6 +140,11 @@ services:
     volumes:
       - ./microservices/users-service/databases/postgres/init/:/docker-entrypoint-initdb.d/
       - ./microservices/users-service/databases/postgres/data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   # POSTS SERVICE
   posts-service:
@@ -149,8 +171,10 @@ services:
       - STORAGE_QUEUE_URLS=kafka-queue:9092
       - STORAGE_QUEUE_NAME=storage_queue
     depends_on:
-      - posts-service-mongodb
-      - kafka-queue
+      posts-service-mongodb:
+        condition: service_healthy
+      kafka-queue:
+        condition: service_healthy
     restart: always
 
   posts-service-mongodb:
@@ -162,6 +186,11 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=mongodb
       - MONGO_INITDB_ROOT_PASSWORD=secret
       - MONGO_INITDB_DATABASE=dopamine_posts
+    healthcheck:
+      test: ["CMD-SHELL", "echo 'db.runCommand(\"ping\").ok' | mongosh localhost:27017/test --quiet"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   # STORAGE SERVICE
   storage-service:
@@ -190,7 +219,10 @@ services:
       - AUTH_QUEUE_URLS=kafka-queue:9092
       - AUTH_QUEUE_NAME=auth_queue
     depends_on:
-      - storage-service-mongodb
+      storage-service-mongodb:
+        condition: service_healthy
+      storage-service-minio:
+        condition: service_healthy
     restart: always
 
   storage-service-mongodb:
@@ -202,6 +234,11 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=mongodb
       - MONGO_INITDB_ROOT_PASSWORD=secret
       - MONGO_INITDB_DATABASE=dopamine_storage
+    healthcheck:
+      test: ["CMD-SHELL", "echo 'db.runCommand(\"ping\").ok' | mongosh localhost:27017/test --quiet"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     
   storage-service-minio:
     image: minio/minio:RELEASE.2023-06-29T05-12-28Z.fips
@@ -212,16 +249,31 @@ services:
     environment:
       - MINIO_ROOT_USER=dopamine
       - MINIO_ROOT_PASSWORD=secret_password
+    healthcheck:
+      test: ["CMD-SHELL", "curl -I http://localhost:9000/minio/health/live"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   # QUEUES
   rabbitmq-queue: 
     image: rabbitmq:3.12.0-alpine
     container_name: dopamine-rabbitmq-queue
+    healthcheck:
+      test: ["CMD-SHELL", "rabbitmq-diagnostics ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   kafka-queue:
     image: bitnami/kafka:3.5-debian-11
     container_name: dopamine-kafka-queue
     environment:
       - ALLOW_PLAINTEXT_LISTENER=yes
+    healthcheck:
+      test: ["CMD-SHELL", "kafka-topics.sh --bootstrap-server localhost:9092 --list"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 
