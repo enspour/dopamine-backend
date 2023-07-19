@@ -32,7 +32,7 @@
         "class-validator": "^0.14.0",
         "cookie-parser": "^1.4.6",
         "kafkajs": "^2.2.4",
-        "mongoose": "^7.3.1",
+        "mongoose": "^7.4.0",
         "passport": "^0.6.0",
         "passport-jwt": "^4.0.1",
         "pg": "^8.11.0",
