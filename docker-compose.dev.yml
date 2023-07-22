@@ -69,7 +69,7 @@ services:
       - ./microservices/auth-service/databases/postgres/init/:/docker-entrypoint-initdb.d/
       - ./microservices/auth-service/databases/postgres/data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U admin"]
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -141,7 +141,7 @@ services:
       - ./microservices/users-service/databases/postgres/init/:/docker-entrypoint-initdb.d/
       - ./microservices/users-service/databases/postgres/data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U admin"]
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
       timeout: 5s
       retries: 5
