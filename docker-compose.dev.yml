@@ -67,7 +67,7 @@ services:
       - POSTGRES_PASSWORD=secret
     volumes:
       - ./microservices/auth-service/databases/postgres/init/:/docker-entrypoint-initdb.d/
-      - ./microservices/auth-service/databases/postgres/data:/var/lib/postgresql/data
+      - ./data/auth-service/postgres:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
@@ -139,7 +139,7 @@ services:
       - POSTGRES_PASSWORD=secret
     volumes:
       - ./microservices/users-service/databases/postgres/init/:/docker-entrypoint-initdb.d/
-      - ./microservices/users-service/databases/postgres/data:/var/lib/postgresql/data
+      - ./data/users-service/postgres:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
@@ -181,13 +181,13 @@ services:
     image: mongo:6.0-jammy
     container_name: dopamine-posts-service-mongodb
     volumes:
-      - ./microservices/posts-service/databases/mongodb/data:/data/db
+      - ./data/posts-service/mongodb:/data/db
     environment:
       - MONGO_INITDB_ROOT_USERNAME=mongodb
       - MONGO_INITDB_ROOT_PASSWORD=secret
       - MONGO_INITDB_DATABASE=dopamine_posts
     healthcheck:
-      test: ["CMD-SHELL", "echo 'db.runCommand(\"ping\").ok' | mongosh localhost:27017/test --quiet"]
+      test: ["CMD-SHELL", "echo 'db.runCommand(\"ping\").ok' | mongosh localhost:27017/dopamine_posts --quiet"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -229,13 +229,13 @@ services:
     image: mongo:6.0-jammy
     container_name: dopamine-storage-service-mongodb
     volumes:
-      - ./microservices/storage-service/databases/mongodb/data:/data/db
+      - ./data/storage-service/mongodb:/data/db
     environment:
       - MONGO_INITDB_ROOT_USERNAME=mongodb
       - MONGO_INITDB_ROOT_PASSWORD=secret
       - MONGO_INITDB_DATABASE=dopamine_storage
     healthcheck:
-      test: ["CMD-SHELL", "echo 'db.runCommand(\"ping\").ok' | mongosh localhost:27017/test --quiet"]
+      test: ["CMD-SHELL", "echo 'db.runCommand(\"ping\").ok' | mongosh localhost:27017/dopamine_storage --quiet"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -245,7 +245,7 @@ services:
     container_name: dopamine-storage-service-minio
     command: server /data
     volumes:
-      - ./microservices/storage-service/databases/minio/data:/data
+      - ./data/storage-service/minio:/data
     environment:
       - MINIO_ROOT_USER=dopamine
       - MINIO_ROOT_PASSWORD=secret_password
