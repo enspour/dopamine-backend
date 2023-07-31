@@ -30,6 +30,12 @@ export class PostsService {
         });
     }
 
+    async findManyByUserIds(userIds: number[]) {
+        return await this.postsRepository.findManyByUserIds(userIds, {
+            owner: true,
+        });
+    }
+
     async updateText(id: Types.ObjectId, text: string) {
         return await this.postsRepository.updateOne(id, "text", text);
     }

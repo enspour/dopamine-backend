@@ -83,6 +83,31 @@ export class PostsRepository {
         return null;
     }
 
+    async findManyByUserIds<T extends PostEntityFKNames = never>(
+        userIds: number[],
+        relations: Record<T, boolean> = <Record<T, boolean>>{},
+    ): Promise<Omit<Post, Exclude<PostEntityFKNames, T>>[] | null> {
+        const query = this.postModel
+            .find({
+                owner: { $in: userIds },
+            })
+            .sort({ createdAt: -1 });
+
+        for (let relation in relations) {
+            if (relations[relation]) {
+                query.populate(relation);
+            }
+        }
+
+        const posts = await query.exec();
+
+        if (posts) {
+            return posts.map(this.transform);
+        }
+
+        return null;
+    }
+
     async like(id: Types.ObjectId, userId: number) {
         const result = await this.postModel
             .updateOne(

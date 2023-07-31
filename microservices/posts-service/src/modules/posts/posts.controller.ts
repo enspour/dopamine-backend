@@ -20,7 +20,7 @@ import { PostsService } from "./posts.service";
 import { JwtAccessAuthGuard } from "@auth-guards/jwt-access.guard";
 import { AccessTokenPayload } from "@auth-strategies/jwt-access.strategy";
 
-import { ParseObjectIdPipe } from "@pipes";
+import { ParseNumberArrayPipe, ParseObjectIdPipe } from "@pipes";
 
 import { CreatePostDto } from "./dto/create-post.dto";
 import { UpdatePostImagesDto } from "./dto/update-post-images.dto";
@@ -60,6 +60,25 @@ export class PostsController {
             statusCode: 200,
             data: {
                 post,
+            },
+        };
+    }
+
+    @UseGuards(JwtAccessAuthGuard)
+    @Get("by-user-ids/:user_ids")
+    async getManyByUserIds(
+        @Param("user_ids", ParseNumberArrayPipe) userIds: number[],
+    ) {
+        const posts = await this.postsService.findManyByUserIds(userIds);
+
+        if (!posts) {
+            throw new NotFoundException("Posts is not found");
+        }
+
+        return {
+            statusCode: 200,
+            data: {
+                posts,
             },
         };
     }
@@ -152,10 +171,6 @@ export class PostsController {
             throw new NotFoundException("Post is not found");
         }
 
-        if (post.owner.id === user.id) {
-            throw new ForbiddenException("You can't like your post");
-        }
-
         await this.postsService.like(id, user.id);
 
         return {
@@ -176,10 +191,6 @@ export class PostsController {
 
         if (!post) {
             throw new NotFoundException("Post is not found");
-        }
-
-        if (post.owner.id === user.id) {
-            throw new ForbiddenException("You can't unlike your post");
         }
 
         await this.postsService.unlike(id, user.id);
