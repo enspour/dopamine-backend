@@ -31,7 +31,7 @@ services:
     environment:
       - ENV=development
       - PORT=3000
-      - PG_HOST=auth-service-postgres
+      - PG_HOST=postgres-database
       - PG_PORT=5432
       - PG_USERNAME=postgres
       - PG_PASSWORD=secret
@@ -49,7 +49,7 @@ services:
     volumes:
       - ./microservices/auth-service:/usr/src/app
     depends_on:
-      auth-service-postgres:
+      postgres-database:
         condition: service_healthy
       auth-service-redis:
         condition: service_healthy
@@ -58,21 +58,6 @@ services:
       kafka-queue:
         condition: service_healthy
     restart: always
-
-  auth-service-postgres:
-    image: postgres:14.5-alpine
-    container_name: dopamine-auth-service-postgres
-    environment:
-      - POSTGRES_USERNAME=postgres
-      - POSTGRES_PASSWORD=secret
-    volumes:
-      - ./microservices/auth-service/databases/postgres/init/:/docker-entrypoint-initdb.d/
-      - ./data/auth-service/postgres:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
 
   auth-service-redis:
     image: redis:7.0.11-alpine
@@ -115,7 +100,7 @@ services:
     environment:
       - ENV=development
       - PORT=3000
-      - PG_HOST=users-service-postgres
+      - PG_HOST=postgres-database
       - PG_PORT=5432
       - PG_USERNAME=postgres
       - PG_PASSWORD=secret
@@ -125,26 +110,11 @@ services:
       - USERS_QUEUE_URLS=kafka-queue:9092
       - USERS_QUEUE_NAME=users_queue
     depends_on:
-      users-service-postgres:
+      postgres-database:
         condition: service_healthy
       kafka-queue:
         condition: service_healthy
     restart: always
-
-  users-service-postgres:
-    image: postgres:14.5-alpine
-    container_name: dopamine-users-service-postgres
-    environment:
-      - POSTGRES_USERNAME=postgres
-      - POSTGRES_PASSWORD=secret
-    volumes:
-      - ./microservices/users-service/databases/postgres/init/:/docker-entrypoint-initdb.d/
-      - ./data/users-service/postgres:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
 
   # POSTS SERVICE
   posts-service:
@@ -159,7 +129,7 @@ services:
     environment:
       - ENV=development
       - PORT=3000
-      - MONGO_HOST=posts-service-mongodb
+      - MONGO_HOST=mongo-database
       - MONGO_PORT=27017
       - MONGO_USER=mongodb
       - MONGO_PASS=secret
@@ -171,26 +141,11 @@ services:
       - STORAGE_QUEUE_URLS=kafka-queue:9092
       - STORAGE_QUEUE_NAME=storage_queue
     depends_on:
-      posts-service-mongodb:
+      mongo-database:
         condition: service_healthy
       kafka-queue:
         condition: service_healthy
     restart: always
-
-  posts-service-mongodb:
-    image: mongo:6.0-jammy
-    container_name: dopamine-posts-service-mongodb
-    volumes:
-      - ./data/posts-service/mongodb:/data/db
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=mongodb
-      - MONGO_INITDB_ROOT_PASSWORD=secret
-      - MONGO_INITDB_DATABASE=dopamine_posts
-    healthcheck:
-      test: ["CMD-SHELL", "echo 'db.runCommand(\"ping\").ok' | mongosh localhost:27017/dopamine_posts --quiet"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
 
   # STORAGE SERVICE
   storage-service:
@@ -205,7 +160,7 @@ services:
     environment:
       - ENV=development
       - PORT=3000
-      - MONGO_HOST=storage-service-mongodb
+      - MONGO_HOST=mongo-database
       - MONGO_PORT=27017
       - MONGO_USER=mongodb
       - MONGO_PASS=secret
@@ -219,26 +174,11 @@ services:
       - AUTH_QUEUE_URLS=kafka-queue:9092
       - AUTH_QUEUE_NAME=auth_queue
     depends_on:
-      storage-service-mongodb:
+      mongo-database:
         condition: service_healthy
       storage-service-minio:
         condition: service_healthy
     restart: always
-
-  storage-service-mongodb:
-    image: mongo:6.0-jammy
-    container_name: dopamine-storage-service-mongodb
-    volumes:
-      - ./data/storage-service/mongodb:/data/db
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=mongodb
-      - MONGO_INITDB_ROOT_PASSWORD=secret
-      - MONGO_INITDB_DATABASE=dopamine_storage
-    healthcheck:
-      test: ["CMD-SHELL", "echo 'db.runCommand(\"ping\").ok' | mongosh localhost:27017/dopamine_storage --quiet"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
     
   storage-service-minio:
     image: minio/minio:RELEASE.2023-06-29T05-12-28Z.fips
@@ -251,6 +191,38 @@ services:
       - MINIO_ROOT_PASSWORD=secret_password
     healthcheck:
       test: ["CMD-SHELL", "curl -I http://localhost:9000/minio/health/live"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # DATABASES
+  postgres-database:
+    image: postgres:14.5-alpine
+    container_name: dopamine-postgres-database
+    environment:
+      - POSTGRES_USERNAME=postgres
+      - POSTGRES_PASSWORD=secret
+    volumes:
+      - ./microservices/auth-service/databases/postgres/init/create-db.sql:/docker-entrypoint-initdb.d/auth-service-create-db.sql
+      - ./microservices/users-service/databases/postgres/init/create-db.sql:/docker-entrypoint-initdb.d/users-service-create-db.sql
+      - ./data/postgressql:/var/lib/postgresql/data/
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  mongo-database:
+    image: mongo:6.0-jammy
+    container_name: dopamine-mongo-database
+    volumes:
+      - ./data/mongodb:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=mongodb
+      - MONGO_INITDB_ROOT_PASSWORD=secret
+      - MONGO_INITDB_DATABASE=dopamine_posts,dopamine_storage
+    healthcheck:
+      test: ["CMD-SHELL", "echo 'db.runCommand(\"ping\").ok' | mongosh localhost:27017/dopamine_posts --quiet"]
       interval: 10s
       timeout: 5s
       retries: 5
