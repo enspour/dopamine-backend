@@ -36,7 +36,8 @@
             "@users-emails/*": ["src/modules/users-emails/*"],
             "@users-security/*": ["src/modules/users-security/*"],
             "@users/*": ["src/modules/users/*"],
-            "@tfa/*": ["src/modules/tfa/*"]
+            "@tfa/*": ["src/modules/tfa/*"],
+            "@health-checker/*": ["src/modules/health-checker/*"]
         },
         "incremental": true,
         "skipLibCheck": true,

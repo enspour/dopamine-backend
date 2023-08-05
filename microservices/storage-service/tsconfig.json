@@ -30,7 +30,8 @@
             "@auth/*": ["src/modules/auth/*"],
             "@files/*": ["src/modules/files/*"],
             "@buckets/*": ["src/modules/buckets/*"],
-            "@links/*": ["src/modules/links/*"]
+            "@links/*": ["src/modules/links/*"],
+            "@health-checker/*": ["src/modules/health-checker/*"]
         },
         "incremental": true,
         "skipLibCheck": true,

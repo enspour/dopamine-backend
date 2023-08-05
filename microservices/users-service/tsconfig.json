@@ -29,7 +29,8 @@
             "@auth/*": ["src/modules/auth/*"],
             "@users/*": ["src/modules/users/*"],
             "@followings/*": ["src/modules/followings/*"],
-            "@followers/*": ["src/modules/followers/*"]
+            "@followers/*": ["src/modules/followers/*"],
+            "@health-checker/*": ["src/modules/health-checker/*"]
         },
         "incremental": true,
         "skipLibCheck": true,
