@@ -58,6 +58,13 @@ services:
       kafka-queue:
         condition: service_healthy
     restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:3000/api/v1/health-checker/live || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    labels:
+      - autoheal=true
 
   auth-service-redis:
     image: redis:7.0.11-alpine
@@ -115,6 +122,13 @@ services:
       kafka-queue:
         condition: service_healthy
     restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:3000/api/v1/health-checker/live || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    labels:
+      - autoheal=true
 
   # POSTS SERVICE
   posts-service:
@@ -146,6 +160,13 @@ services:
       kafka-queue:
         condition: service_healthy
     restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:3000/api/v1/health-checker/live || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    labels:
+      - autoheal=true
 
   # STORAGE SERVICE
   storage-service:
@@ -179,7 +200,14 @@ services:
       storage-service-minio:
         condition: service_healthy
     restart: always
-    
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:3000/api/v1/health-checker/live || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    labels:
+      - autoheal=true
+
   storage-service-minio:
     image: minio/minio:RELEASE.2023-06-29T05-12-28Z.fips
     container_name: dopamine-storage-service-minio
@@ -205,7 +233,7 @@ services:
     volumes:
       - ./microservices/auth-service/databases/postgres/init/create-db.sql:/docker-entrypoint-initdb.d/auth-service-create-db.sql
       - ./microservices/users-service/databases/postgres/init/create-db.sql:/docker-entrypoint-initdb.d/users-service-create-db.sql
-      - ./data/postgressql:/var/lib/postgresql/data/
+      - ./data/postgresql:/var/lib/postgresql/data/
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
@@ -222,7 +250,7 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=secret
       - MONGO_INITDB_DATABASE=dopamine_posts,dopamine_storage
     healthcheck:
-      test: ["CMD-SHELL", "echo 'db.runCommand(\"ping\").ok' | mongosh localhost:27017/dopamine_posts --quiet"]
+      test: ["CMD-SHELL", "echo 'db.runCommand(\"ping\").ok' | mongosh localhost:27017/dopamine_storage --quiet"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -248,4 +276,12 @@ services:
       timeout: 5s
       retries: 5
 
-
+  # TOOLS:
+  # Restart All unhealthy Containers
+  auto-heal:
+    image: willfarrell/autoheal:1.2.0
+    container_name: dopamine-tools-restart-unhealthy-containers
+    environment:
+      - AUTOHEAL_INTERVAL=20
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
