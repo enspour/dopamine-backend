@@ -1,3 +1,4 @@
+import { ValidationPipe } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 import * as cookieParser from "cookie-parser";
 
@@ -5,8 +6,6 @@ import { AppModule } from "./app.module";
 
 import { connectAuthQueue } from "@loaders/connect-auth-queue";
 import { connectUsersQueue } from "@loaders/connect-users-queue";
-
-import { ValidationPipe } from "@pipes";
 
 import configs from "@configs";
 
@@ -19,7 +18,7 @@ async function bootstrap() {
 
     app.setGlobalPrefix("/api/v1");
 
-    app.useGlobalPipes(new ValidationPipe());
+    app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
     connectAuthQueue(app);
     connectUsersQueue(app);
