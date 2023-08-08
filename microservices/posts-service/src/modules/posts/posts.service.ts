@@ -15,7 +15,9 @@ export class PostsService {
     async create(text: string, images: string[], userId: number) {
         const post = await this.postsRepository.createOne(text, images, userId);
 
-        await this.storageService.makePublicImages(images, userId);
+        if (images.length > 0) {
+            await this.storageService.makePublicImages(images, userId);
+        }
 
         return post;
     }
@@ -30,8 +32,8 @@ export class PostsService {
         });
     }
 
-    async findManyByUserIds(userIds: number[]) {
-        return await this.postsRepository.findManyByUserIds(userIds, {
+    async findManyByUserIds(ids: number[], page: number) {
+        return await this.postsRepository.findManyByUserIds(ids, page, {
             owner: true,
         });
     }
@@ -47,7 +49,9 @@ export class PostsService {
             images,
         );
 
-        await this.storageService.makePublicImages(images, userId);
+        if (images.length > 0) {
+            await this.storageService.makePublicImages(images, userId);
+        }
 
         return result;
     }

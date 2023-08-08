@@ -23,7 +23,7 @@ export class PostsRepository {
             owner: ownerId,
         });
 
-        const post = await doc.save();
+        const post = await (await doc.save()).populate("owner");
 
         return this.transform(post);
     }
@@ -84,14 +84,17 @@ export class PostsRepository {
     }
 
     async findManyByUserIds<T extends PostEntityFKNames = never>(
-        userIds: number[],
+        ids: number[],
+        page: number,
         relations: Record<T, boolean> = <Record<T, boolean>>{},
     ): Promise<Omit<Post, Exclude<PostEntityFKNames, T>>[] | null> {
         const query = this.postModel
             .find({
-                owner: { $in: userIds },
+                owner: { $in: ids },
             })
-            .sort({ createdAt: -1 });
+            .sort({ createdAt: -1 })
+            .limit(10)
+            .skip(page * 10);
 
         for (let relation in relations) {
             if (relations[relation]) {

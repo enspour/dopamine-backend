@@ -7,8 +7,10 @@ import {
     HttpCode,
     NotFoundException,
     Param,
+    ParseIntPipe,
     Post,
     Put,
+    Query,
     Req,
     UseGuards,
 } from "@nestjs/common";
@@ -48,6 +50,26 @@ export class PostsController {
     }
 
     @UseGuards(JwtAccessAuthGuard)
+    @Get("by-user-ids")
+    async getManyByUserIds(
+        @Query("ids", ParseNumberArrayPipe) ids: number[],
+        @Query("page", ParseIntPipe) page: number,
+    ) {
+        const posts = await this.postsService.findManyByUserIds(ids, page);
+
+        if (!posts) {
+            throw new NotFoundException("Posts is not found");
+        }
+
+        return {
+            statusCode: 200,
+            data: {
+                posts,
+            },
+        };
+    }
+
+    @UseGuards(JwtAccessAuthGuard)
     @Get(":id")
     async getOne(@Param("id", ParseObjectIdPipe) id: Types.ObjectId) {
         const post = await this.postsService.findOne(id);
@@ -60,25 +82,6 @@ export class PostsController {
             statusCode: 200,
             data: {
                 post,
-            },
-        };
-    }
-
-    @UseGuards(JwtAccessAuthGuard)
-    @Get("by-user-ids/:user_ids")
-    async getManyByUserIds(
-        @Param("user_ids", ParseNumberArrayPipe) userIds: number[],
-    ) {
-        const posts = await this.postsService.findManyByUserIds(userIds);
-
-        if (!posts) {
-            throw new NotFoundException("Posts is not found");
-        }
-
-        return {
-            statusCode: 200,
-            data: {
-                posts,
             },
         };
     }

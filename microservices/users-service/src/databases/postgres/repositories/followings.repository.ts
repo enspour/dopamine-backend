@@ -25,6 +25,9 @@ export class FollowingsRepository {
             where: {
                 userId,
             },
+            order: {
+                followerId: "ASC",
+            },
             relations,
         });
     }
@@ -36,6 +39,9 @@ export class FollowingsRepository {
         return await this.repository.find({
             where: {
                 followerId: userId,
+            },
+            order: {
+                userId: "ASC",
             },
             relations,
         });
