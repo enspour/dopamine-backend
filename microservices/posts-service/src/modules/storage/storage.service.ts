@@ -6,9 +6,9 @@ import { StorageQueueService } from "@storage-queue/storage-queue.service";
 export class StorageService {
     constructor(private storageQueueService: StorageQueueService) {}
 
-    async makePublicImages(images: string[], userId: number) {
-        const promises = images.map((image) =>
-            this.storageQueueService.makeFilePublic(image, userId),
+    async makeFilePublic(files: string[], userId: number) {
+        const promises = files.map((file) =>
+            this.storageQueueService.makeFilePublic(file, userId),
         );
 
         return await Promise.allSettled(promises);

@@ -13,7 +13,7 @@ export class PostEntity implements Record<PostEntityFKNames, any> {
     text: string;
 
     @Prop({ type: [String], default: [] })
-    images: string[];
+    files: string[];
 
     @Prop({ type: Number, ref: UserEntity.name })
     owner: UserEntity;

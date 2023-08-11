@@ -25,7 +25,7 @@ import { AccessTokenPayload } from "@auth-strategies/jwt-access.strategy";
 import { ParseNumberArrayPipe, ParseObjectIdPipe } from "@pipes";
 
 import { CreatePostDto } from "./dto/create-post.dto";
-import { UpdatePostImagesDto } from "./dto/update-post-images.dto";
+import { UpdatePostFilesDto } from "./dto/update-post-files.dto";
 import { UpdatePostTextDto } from "./dto/update-post-text.dto";
 
 @Controller("posts")
@@ -37,9 +37,9 @@ export class PostsController {
     async create(@Body() data: CreatePostDto, @Req() req: Request) {
         const { user } = req.user as AccessTokenPayload;
 
-        const { text, images } = data;
+        const { text, files } = data;
 
-        const post = await this.postsService.create(text, images, user.id);
+        const post = await this.postsService.create(text, files, user.id);
 
         return {
             statusCode: 201,
@@ -53,13 +53,10 @@ export class PostsController {
     @Get("by-user-ids")
     async getManyByUserIds(
         @Query("ids", ParseNumberArrayPipe) ids: number[],
-        @Query("page", ParseIntPipe) page: number,
+        @Query("from", ParseIntPipe) from: number,
+        @Query("to", ParseIntPipe) to: number,
     ) {
-        const posts = await this.postsService.findManyByUserIds(ids, page);
-
-        if (!posts) {
-            throw new NotFoundException("Posts is not found");
-        }
+        const posts = await this.postsService.findManyByUserIds(ids, from, to);
 
         return {
             statusCode: 200,
@@ -136,11 +133,11 @@ export class PostsController {
     }
 
     @UseGuards(JwtAccessAuthGuard)
-    @Put("images")
-    async updateImages(@Body() data: UpdatePostImagesDto, @Req() req: Request) {
+    @Put("files")
+    async updateFiles(@Body() data: UpdatePostFilesDto, @Req() req: Request) {
         const { user } = req.user as AccessTokenPayload;
 
-        const { id, images } = data;
+        const { id, files } = data;
 
         const post = await this.postsService.findOne(id);
 
@@ -152,7 +149,7 @@ export class PostsController {
             throw new ForbiddenException("Don't access to post");
         }
 
-        await this.postsService.updateImages(id, images, user.id);
+        await this.postsService.updateFiles(id, files, user.id);
 
         return {
             statusCode: 200,

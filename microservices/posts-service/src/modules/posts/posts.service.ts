@@ -1,9 +1,9 @@
 import { Injectable } from "@nestjs/common";
+import { Types } from "mongoose";
 
 import { PostsRepository } from "@mongodb/repositories/posts.repository";
 
 import { StorageService } from "@storage/storage.service";
-import { Types } from "mongoose";
 
 @Injectable()
 export class PostsService {
@@ -12,11 +12,11 @@ export class PostsService {
         private storageService: StorageService,
     ) {}
 
-    async create(text: string, images: string[], userId: number) {
-        const post = await this.postsRepository.createOne(text, images, userId);
+    async create(text: string, files: string[], userId: number) {
+        const post = await this.postsRepository.createOne(text, files, userId);
 
-        if (images.length > 0) {
-            await this.storageService.makePublicImages(images, userId);
+        if (files.length > 0) {
+            await this.storageService.makeFilePublic(files, userId);
         }
 
         return post;
@@ -32,8 +32,8 @@ export class PostsService {
         });
     }
 
-    async findManyByUserIds(ids: number[], page: number) {
-        return await this.postsRepository.findManyByUserIds(ids, page, {
+    async findManyByUserIds(ids: number[], from: number, to: number) {
+        return await this.postsRepository.findManyByUserIds(ids, from, to, {
             owner: true,
         });
     }
@@ -42,15 +42,11 @@ export class PostsService {
         return await this.postsRepository.updateOne(id, "text", text);
     }
 
-    async updateImages(id: Types.ObjectId, images: string[], userId: number) {
-        const result = await this.postsRepository.updateOne(
-            id,
-            "images",
-            images,
-        );
+    async updateFiles(id: Types.ObjectId, files: string[], userId: number) {
+        const result = await this.postsRepository.updateOne(id, "files", files);
 
-        if (images.length > 0) {
-            await this.storageService.makePublicImages(images, userId);
+        if (files.length > 0) {
+            await this.storageService.makeFilePublic(files, userId);
         }
 
         return result;

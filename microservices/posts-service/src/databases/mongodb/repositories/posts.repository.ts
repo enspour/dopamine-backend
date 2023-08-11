@@ -14,13 +14,13 @@ export class PostsRepository {
 
     async createOne(
         text: string,
-        images: string[],
-        ownerId: number,
+        files: string[],
+        owner: number,
     ): Promise<Post> {
         const doc = new this.postModel({
             text,
-            images,
-            owner: ownerId,
+            files,
+            owner,
         });
 
         const post = await (await doc.save()).populate("owner");
@@ -85,16 +85,17 @@ export class PostsRepository {
 
     async findManyByUserIds<T extends PostEntityFKNames = never>(
         ids: number[],
-        page: number,
+        from: number,
+        to: number,
         relations: Record<T, boolean> = <Record<T, boolean>>{},
     ): Promise<Omit<Post, Exclude<PostEntityFKNames, T>>[] | null> {
         const query = this.postModel
             .find({
                 owner: { $in: ids },
             })
-            .sort({ createdAt: -1 })
-            .limit(10)
-            .skip(page * 10);
+            .sort({ createdAt: "descending" })
+            .skip(from)
+            .limit(to - from);
 
         for (let relation in relations) {
             if (relations[relation]) {
@@ -108,7 +109,7 @@ export class PostsRepository {
             return posts.map(this.transform);
         }
 
-        return null;
+        return [];
     }
 
     async like(id: Types.ObjectId, userId: number) {
