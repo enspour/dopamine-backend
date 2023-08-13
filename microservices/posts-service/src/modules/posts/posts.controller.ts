@@ -33,23 +33,6 @@ export class PostsController {
     constructor(private postsService: PostsService) {}
 
     @UseGuards(JwtAccessAuthGuard)
-    @Post()
-    async create(@Body() data: CreatePostDto, @Req() req: Request) {
-        const { user } = req.user as AccessTokenPayload;
-
-        const { text, files } = data;
-
-        const post = await this.postsService.create(text, files, user.id);
-
-        return {
-            statusCode: 201,
-            data: {
-                post,
-            },
-        };
-    }
-
-    @UseGuards(JwtAccessAuthGuard)
     @Get("by-user-ids")
     async getManyByUserIds(
         @Query("ids", ParseNumberArrayPipe) ids: number[],
@@ -77,6 +60,23 @@ export class PostsController {
 
         return {
             statusCode: 200,
+            data: {
+                post,
+            },
+        };
+    }
+
+    @UseGuards(JwtAccessAuthGuard)
+    @Post()
+    async create(@Body() data: CreatePostDto, @Req() req: Request) {
+        const { user } = req.user as AccessTokenPayload;
+
+        const { text, files } = data;
+
+        const post = await this.postsService.create(text, files, user.id);
+
+        return {
+            statusCode: 201,
             data: {
                 post,
             },

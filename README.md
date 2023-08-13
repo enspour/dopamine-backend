@@ -24,3 +24,11 @@
 - RabbitMQ
 - Kafka
 - Docker
+
+### Launch (development)
+
+- Launched on Ubuntu 23.04
+
+``` bash
+    docker compose -f docker-compose.dev.yml up --build
+```
