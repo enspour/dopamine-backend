@@ -1,7 +1,10 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { HydratedDocument, SchemaTypes, Types } from "mongoose";
 
-import { FileEntity, transformFile } from "./file.schema";
+import {
+    FileMetadataEntity,
+    transformFileMetadata,
+} from "./file-metadata.schema";
 
 export type LinkDocument = HydratedDocument<LinkEntity>;
 
@@ -9,10 +12,10 @@ export type LinkDocument = HydratedDocument<LinkEntity>;
 export class LinkEntity {
     @Prop({
         type: SchemaTypes.ObjectId,
-        ref: FileEntity.name,
+        ref: FileMetadataEntity.name,
         required: true,
     })
-    file: Types.ObjectId | FileEntity;
+    file: Types.ObjectId | FileMetadataEntity;
 
     @Prop({ type: Date, default: Date.now })
     createdAt: Date;
@@ -27,7 +30,7 @@ export const transformLink = (obj: any) => {
         link.id = link._id;
         delete link._id;
 
-        link.file = transformFile(link.file);
+        link.file = transformFileMetadata(link.file);
 
         return link;
     }

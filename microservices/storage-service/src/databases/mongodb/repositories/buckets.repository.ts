@@ -10,11 +10,11 @@ import { Bucket } from "@interfaces";
 export class BucketsRepository {
     constructor(
         @InjectModel(BucketEntity.name)
-        private bucketModel: Model<BucketEntity>,
+        private model: Model<BucketEntity>,
     ) {}
 
     async createOne(name: string, users: number[]): Promise<Bucket> {
-        const doc = new this.bucketModel({
+        const doc = new this.model({
             _id: name,
             users,
         });
@@ -25,7 +25,7 @@ export class BucketsRepository {
     }
 
     async removeOneByName(name: string) {
-        const result = await this.bucketModel.deleteOne({ _id: name }).exec();
+        const result = await this.model.deleteOne({ _id: name }).exec();
 
         if (result.deletedCount) {
             return true;
@@ -35,7 +35,7 @@ export class BucketsRepository {
     }
 
     async findOneByName(name: string): Promise<Bucket | null> {
-        const bucket = await this.bucketModel.findOne({ _id: name }).exec();
+        const bucket = await this.model.findOne({ _id: name }).exec();
 
         if (bucket) {
             return this.transform(bucket);

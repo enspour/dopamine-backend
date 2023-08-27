@@ -2,11 +2,14 @@ import { Module } from "@nestjs/common";
 import { MongooseModule } from "@nestjs/mongoose";
 
 import { BucketEntity, BucketSchema } from "./schemas/bucket.schema";
-import { FileEntity, FileSchema } from "./schemas/file.schema";
+import {
+    FileMetadataEntity,
+    FileMetadataSchema,
+} from "./schemas/file-metadata.schema";
 import { LinkEntity, LinkSchema } from "./schemas/link.schema";
 
 import { BucketsRepository } from "./repositories/buckets.repository";
-import { FilesRepository } from "./repositories/files.repository";
+import { FileMetadataRepository } from "./repositories/file-metadata.repository";
 import { LinksRepository } from "./repositories/links.repository";
 
 import configs from "@configs";
@@ -20,8 +23,8 @@ const { host, port, pass, user, db } = configs.mongodb;
         ),
         MongooseModule.forFeature([
             {
-                name: FileEntity.name,
-                schema: FileSchema,
+                name: FileMetadataEntity.name,
+                schema: FileMetadataSchema,
             },
             {
                 name: BucketEntity.name,
@@ -33,7 +36,7 @@ const { host, port, pass, user, db } = configs.mongodb;
             },
         ]),
     ],
-    providers: [FilesRepository, BucketsRepository, LinksRepository],
-    exports: [FilesRepository, BucketsRepository, LinksRepository],
+    providers: [FileMetadataRepository, BucketsRepository, LinksRepository],
+    exports: [FileMetadataRepository, BucketsRepository, LinksRepository],
 })
 export class MongodbModule {}

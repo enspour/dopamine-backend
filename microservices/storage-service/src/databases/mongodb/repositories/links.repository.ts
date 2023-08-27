@@ -9,11 +9,11 @@ import { Link } from "@interfaces";
 @Injectable()
 export class LinksRepository {
     constructor(
-        @InjectModel(LinkEntity.name) private linkModel: Model<LinkEntity>,
+        @InjectModel(LinkEntity.name) private model: Model<LinkEntity>,
     ) {}
 
     async createOne(fileId: Types.ObjectId): Promise<Link> {
-        const doc = new this.linkModel({
+        const doc = new this.model({
             file: fileId,
         });
 
@@ -23,7 +23,7 @@ export class LinksRepository {
     }
 
     async removeOneById(id: Types.ObjectId) {
-        const result = await this.linkModel.deleteOne({ _id: id }).exec();
+        const result = await this.model.deleteOne({ _id: id }).exec();
 
         if (result.deletedCount) {
             return true;
@@ -33,7 +33,7 @@ export class LinksRepository {
     }
 
     async findOneById(id: Types.ObjectId): Promise<Link | null> {
-        const link = await this.linkModel
+        const link = await this.model
             .findOne({ _id: id })
             .populate({
                 path: "file",

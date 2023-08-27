@@ -4,7 +4,7 @@ import { Bucket } from "./bucket.interface";
 import { FileAccess } from "./file-access.interface";
 import { FileExtension } from "./file-extension.interface";
 
-export interface File {
+export interface FileMetadata {
     id: Types.ObjectId;
     name: string;
     size: number;

@@ -2,14 +2,15 @@ import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model, Types } from "mongoose";
 
-import { FileEntity } from "@mongodb/schemas/file.schema";
+import { FileMetadataEntity } from "@mongodb/schemas/file-metadata.schema";
 
-import { File, FileExtension } from "@interfaces";
+import { FileExtension, FileMetadata } from "@interfaces";
 
 @Injectable()
-export class FilesRepository {
+export class FileMetadataRepository {
     constructor(
-        @InjectModel(FileEntity.name) private fileModel: Model<FileEntity>,
+        @InjectModel(FileMetadataEntity.name)
+        private model: Model<FileMetadataEntity>,
     ) {}
 
     async createOne(
@@ -19,8 +20,8 @@ export class FilesRepository {
         extension: FileExtension,
         bucket: string,
         ownerId: number,
-    ): Promise<File> {
-        const doc = new this.fileModel({
+    ): Promise<FileMetadata> {
+        const doc = new this.model({
             _id: id,
             name,
             size,
@@ -34,12 +35,12 @@ export class FilesRepository {
         return this.transform(file);
     }
 
-    async updateOne<T extends keyof FileEntity>(
+    async updateOne<T extends keyof FileMetadataEntity>(
         id: Types.ObjectId,
         field: T,
-        value: FileEntity[T],
+        value: FileMetadataEntity[T],
     ) {
-        const result = await this.fileModel
+        const result = await this.model
             .updateOne(
                 { _id: id },
                 {
@@ -59,7 +60,7 @@ export class FilesRepository {
     }
 
     async removeOneById(id: Types.ObjectId) {
-        const result = await this.fileModel.deleteOne({ _id: id }).exec();
+        const result = await this.model.deleteOne({ _id: id }).exec();
 
         if (result.deletedCount) {
             return true;
@@ -68,8 +69,8 @@ export class FilesRepository {
         return false;
     }
 
-    async findOneById(id: Types.ObjectId): Promise<File | null> {
-        const file = await this.fileModel
+    async findOneById(id: Types.ObjectId): Promise<FileMetadata | null> {
+        const file = await this.model
             .findOne({ _id: id })
             .populate("bucket")
             .exec();
@@ -81,7 +82,7 @@ export class FilesRepository {
         return null;
     }
 
-    private transform(file: FileEntity): File {
+    private transform(file: FileMetadataEntity): FileMetadata {
         if ("transform" in file && typeof file.transform === "function") {
             return file.transform();
         }

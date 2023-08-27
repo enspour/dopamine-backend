@@ -1,9 +1,9 @@
 import { Types } from "mongoose";
 
-import { File } from "./file.interface";
+import { FileMetadata } from "./file-metadata.interface";
 
 export interface Link {
     id: Types.ObjectId;
-    file: File;
+    file: FileMetadata;
     createdAt: Date;
 }

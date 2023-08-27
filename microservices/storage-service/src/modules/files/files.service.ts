@@ -3,7 +3,7 @@ import { Types } from "mongoose";
 
 import { MinioService } from "@minio/minio.service";
 
-import { FilesRepository } from "@mongodb/repositories/files.repository";
+import { FileMetadataRepository } from "@mongodb/repositories/file-metadata.repository";
 
 import { FileAccess } from "@interfaces";
 
@@ -12,7 +12,7 @@ import { getFileExtension } from "@utils";
 @Injectable()
 export class FilesService {
     constructor(
-        private filesRepository: FilesRepository,
+        private filesRepository: FileMetadataRepository,
         private minioService: MinioService,
     ) {}
 

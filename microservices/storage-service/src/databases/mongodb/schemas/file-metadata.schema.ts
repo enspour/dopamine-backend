@@ -10,10 +10,10 @@ import {
     fileExtensions,
 } from "@interfaces";
 
-export type FileDocument = HydratedDocument<FileEntity>;
+export type FileMetadataDocument = HydratedDocument<FileMetadataEntity>;
 
 @Schema()
-export class FileEntity {
+export class FileMetadataEntity {
     @Prop({ type: SchemaTypes.ObjectId })
     _id: Types.ObjectId;
 
@@ -47,9 +47,10 @@ export class FileEntity {
     modifiedAt: Date;
 }
 
-export const FileSchema = SchemaFactory.createForClass(FileEntity);
+export const FileMetadataSchema =
+    SchemaFactory.createForClass(FileMetadataEntity);
 
-export const transformFile = (obj: any) => {
+export const transformFileMetadata = (obj: any) => {
     if (obj && typeof obj === "object" && "_id" in obj) {
         const file = { ...obj };
 
@@ -64,7 +65,7 @@ export const transformFile = (obj: any) => {
     return obj;
 };
 
-FileSchema.method("transform", function () {
+FileMetadataSchema.method("transform", function () {
     const obj = this.toObject();
-    return transformFile(obj);
+    return transformFileMetadata(obj);
 });
