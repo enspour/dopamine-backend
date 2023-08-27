@@ -5,6 +5,8 @@ import { PostsRepository } from "@mongodb/repositories/posts.repository";
 
 import { StorageService } from "@storage/storage.service";
 
+import { FileMetadata } from "@interfaces";
+
 @Injectable()
 export class PostsService {
     constructor(
@@ -12,7 +14,7 @@ export class PostsService {
         private storageService: StorageService,
     ) {}
 
-    async create(text: string, files: string[], userId: number) {
+    async create(text: string, files: FileMetadata[], userId: number) {
         const post = await this.postsRepository.createOne(text, files, userId);
 
         if (files.length > 0) {
@@ -42,7 +44,11 @@ export class PostsService {
         return await this.postsRepository.updateOne(id, "text", text);
     }
 
-    async updateFiles(id: Types.ObjectId, files: string[], userId: number) {
+    async updateFiles(
+        id: Types.ObjectId,
+        files: FileMetadata[],
+        userId: number,
+    ) {
         const result = await this.postsRepository.updateOne(id, "files", files);
 
         if (files.length > 0) {

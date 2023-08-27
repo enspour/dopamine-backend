@@ -3,25 +3,24 @@ import { HydratedDocument, Types } from "mongoose";
 
 import { UserEntity, transformUser } from "./user.schema";
 
+import { FileMetadata } from "@interfaces";
+
 export type PostDocument = HydratedDocument<PostEntity>;
 
 export type PostEntityFKNames = "owner" | "likes" | "comments";
 
 @Schema()
-export class PostEntity implements Record<PostEntityFKNames, any> {
+export class PostEntity {
     @Prop({ type: String, default: "" })
     text: string;
 
-    @Prop({ type: [String], default: [] })
-    files: string[];
+    @Prop({ type: [Object], default: [] })
+    files: FileMetadata[];
 
     @Prop({ type: Number, ref: UserEntity.name })
     owner: UserEntity;
 
-    @Prop({
-        type: [{ type: Number, ref: UserEntity.name }],
-        default: [],
-    })
+    @Prop({ type: [{ type: Number, ref: UserEntity.name }], default: [] })
     likes: UserEntity[];
 
     @Prop({
@@ -47,8 +46,8 @@ export const transformPost = (obj) => {
         delete post._id;
 
         post.owner = transformUser(post.owner);
-        post.likes = post.likes.map((user) => transformUser(user));
-        post.comments = post.comments.map((comment) => transformPost(comment));
+        post.likes = post.likes.map(transformUser);
+        post.comments = post.comments.map(transformPost);
 
         return post;
     }

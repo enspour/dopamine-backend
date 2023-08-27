@@ -4,7 +4,7 @@ import { Model, Types } from "mongoose";
 
 import { PostEntity, PostEntityFKNames } from "@mongodb/schemas/post.schema";
 
-import { Post } from "@interfaces";
+import { FileMetadata, Post } from "@interfaces";
 
 @Injectable()
 export class PostsRepository {
@@ -14,7 +14,7 @@ export class PostsRepository {
 
     async createOne(
         text: string,
-        files: string[],
+        files: FileMetadata[],
         owner: number,
     ): Promise<Post> {
         const doc = new this.postModel({
@@ -23,9 +23,10 @@ export class PostsRepository {
             owner,
         });
 
-        const post = await (await doc.save()).populate("owner");
+        const post = await doc.save();
+        const populated = await post.populate(["owner", "files"]);
 
-        return this.transform(post);
+        return this.transform(populated);
     }
 
     async updateOne<T extends keyof PostEntity>(

@@ -1,11 +1,12 @@
 import { Types } from "mongoose";
 
+import { FileMetadata } from "./file.interface";
 import { User } from "./user.interface";
 
 export interface Post {
     id: Types.ObjectId;
     text: string;
-    images: string[];
+    files: FileMetadata[];
     owner: User;
     likes: User[];
     comments: Post[];

@@ -1,10 +1,12 @@
-import { IsMongoId, MinLength } from "class-validator";
+import { ArrayNotEmpty, IsMongoId } from "class-validator";
 import { Types } from "mongoose";
+
+import { FileMetadata } from "@interfaces";
 
 export class UpdatePostFilesDto {
     @IsMongoId()
     id: Types.ObjectId;
 
-    @MinLength(1, { each: true })
-    files: string[];
+    @ArrayNotEmpty()
+    files: FileMetadata[];
 }
